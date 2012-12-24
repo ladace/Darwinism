@@ -2,7 +2,7 @@
 
 
 #ifdef RX28M_1024
-#define MOTION_FILE_PATH    "../../../Data/motion_1024.bin"
+#define MOTION_FILE_PATH    "/darwin/Data/motion_4096.bin"
 #else
 #define MOTION_FILE_PATH    "../../../Data/motion_4096.bin"
 #endif

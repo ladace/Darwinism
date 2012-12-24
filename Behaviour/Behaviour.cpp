@@ -9,7 +9,7 @@
 
 using namespace Robot;
 
-#define MOTION_FILE_PATH	"../../../Data/motion_4096.bin"
+#define MOTION_FILE_PATH	"/darwin/Data/motion_4096.bin"
 
 #define WALKER_FILE_PATH	"walker.ini"
 
