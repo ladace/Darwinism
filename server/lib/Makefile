@@ -4,7 +4,7 @@ OBJ=$(OBJ_SRC:%.c=%.o)
 all:httpd.a
 
 httpd.a: $(OBJ)
-	ar -q httpd.a $(OBJ)
+	ar cr httpd.a $(OBJ)
 
 $(OBJ): %.o: %.c
 	gcc -c $<
