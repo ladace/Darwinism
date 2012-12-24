@@ -1,15 +1,14 @@
-CFLAGS=-Ilib
 CXXFLAGS +=	-O2 -DLINUX -g -Wall -fmessage-length=0 $(INCLUDE_DIRS)
 INCLUDE_DIRS = -Ilib -I../MyActionEditor -I../Behaviour
 LIBS += -lpthread -lncurses -lrt
 
-all: ms
+all: server
 
-ms: main.o lib actionEditor.o darwin.a
-	$(CXX) -o ms main.o lib/httpd.a ../MyActionEditor/actionEditor.o ../../../lib/darwin.a $(LIBS)
+server: main.o lib actionEditor.o darwin.a
+	$(CXX) -o server main.o lib/httpd.a ../MyActionEditor/actionEditor.o ../../../lib/darwin.a $(LIBS)
 
-run: ms
-	./ms
+run: server
+	./server
 
 lib:
 	@cd lib && $(MAKE)
@@ -21,7 +20,7 @@ actionEditor.o:
 	$(MAKE) actionEditor.o -C ../MyActionEditor
 
 clean:
-	@rm *.o ms
+	@rm *.o server
 
 .PHONY: all clean run
 
