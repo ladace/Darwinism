@@ -19,13 +19,9 @@ darwin.a:
 lib.a:
 	ar cr lib.a $(OBJS)
 
-$(TARGET): $(OBJS) ../../../lib/darwin.a lib.a
+$(TARGET): main.o $(OBJS) ../../../lib/darwin.a lib.a
 	$(CXX) -o $(TARGET) main.o lib.a ../../../lib/darwin.a $(LIBS)
 	
 clean:
 	rm -f $(OBJS) $(TARGET) lib.a
-
-
-
-
 
