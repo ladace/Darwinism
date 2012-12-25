@@ -1,7 +1,12 @@
 #include <pthread.h>
-#include "httpd.h"
+#include "behav.h"
+#include "Behaviour.h"
 
 extern "C" {
+    using Robot::Behaviour;
+    using Robot::Walking;
+    using Robot::Action;
+
     pthread_t beh_tid;
     pthread_mutex_t beh_mutex;
 

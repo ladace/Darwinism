@@ -16,7 +16,7 @@ all: darwin.a $(TARGET) lib.a
 darwin.a:
 	make -C ../../../build
 
-lib.a:
+lib.a: $(OBJS)
 	ar cr lib.a $(OBJS)
 
 $(TARGET): main.o $(OBJS) ../../../lib/darwin.a lib.a

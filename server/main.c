@@ -22,6 +22,9 @@ int main() {
 
     httpdSetFileBase(server, "./www");
     httpdAddFileContent(server, "/", "index.html", HTTP_TRUE, NULL, "index.html");
+
+    printf("Server Start.\n");
+
     while(httpdGetConnection(server, NULL) == 1) {
         if (httpdReadRequest(server) < 0) {
             httpdEndRequest(server);
@@ -31,5 +34,6 @@ int main() {
         httpdProcessRequest(server);
         httpdEndRequest(server);
     }
+
     exit(0);
 }
