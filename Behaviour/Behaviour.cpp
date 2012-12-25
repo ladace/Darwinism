@@ -11,7 +11,7 @@ using namespace Robot;
 
 #define MOTION_FILE_PATH	"/darwin/Data/motion_4096.bin"
 
-#define WALKER_FILE_PATH	"walker.ini"
+#define WALKER_FILE_PATH	"../walker.ini"
 
 #define U2D_DEV_NAME0	   "/dev/ttyUSB0"
 #define U2D_DEV_NAME1	   "/dev/ttyUSB1"
@@ -24,6 +24,8 @@ Behaviour* Behaviour::m_UniqueInstance = 0;
 HeadFixed headFixedMode;
 
 Behaviour::Behaviour() {
+        printf("=========Behaviour Initializing==========\n");
+
 	if(MotionManager::GetInstance()->Initialize(&cm730) == false) {
 		linux_cm730.SetPortName(U2D_DEV_NAME1);
 		if(MotionManager::GetInstance()->Initialize(&cm730) == false)
@@ -33,10 +35,14 @@ Behaviour::Behaviour() {
 		}
 	}
 
+        printf("Motion Manager Initialized.\n");
+
 	MotionManager::GetInstance()->AddModule((MotionModule*)Action::GetInstance());
 	MotionManager::GetInstance()->AddModule((MotionModule*)Head::GetInstance());
 	MotionManager::GetInstance()->AddModule((MotionModule*)Walking::GetInstance());
 	LinuxMotionTimer::Initialize(MotionManager::GetInstance());
+
+        printf("All Motion Modules Initialized.\n");
 
 	int firm_ver = 0;
 	if(cm730.ReadByte(JointData::ID_HEAD_PAN, RX28M::P_VERSION, &firm_ver, 0)  != CM730::SUCCESS)
@@ -57,6 +63,8 @@ Behaviour::Behaviour() {
 	}
 	else
 		exit(0);
+
+
 	WalkerManager::GetInstance()->LoadParSetFile(WALKER_FILE_PATH);
 
     Head::GetInstance()->m_Joint.SetEnableHeadOnly(true);
@@ -65,7 +73,7 @@ Behaviour::Behaviour() {
 	MotionManager::GetInstance()->SetEnable(true);
 	cm730.WriteByte(CM730::P_LED_PANNEL, 0x01|0x02|0x04, NULL);
 
-	LinuxActionScript::PlayMP3("../../../Data/mp3/Demonstration ready mode.mp3");
+	LinuxActionScript::PlayMP3("/darwin/Data/mp3/Demonstration ready mode.mp3");
 
 	m_Real_walking = false;
 	m_Real_Acting  = false;
@@ -74,6 +82,8 @@ Behaviour::Behaviour() {
 	m_Head_Mode = &headFixedMode;
 	//headFixedMode.SetAngle(Head::GetInstance()->GetPanAngle(), Head::GetInstance()->GetTiltAngle())
 	m_old_btn   = 0;
+
+        printf("---------Behaviour Initialized-----------\n");
 }
 
 void Behaviour::CheckButton() {

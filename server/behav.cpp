@@ -16,11 +16,18 @@ extern "C" {
     void start(httpd* server) {
         if (robot_on) return;
         pthread_mutex_lock(&beh_mutex);
+
         Behaviour::GetInstance();
+        robot_on = true;
+
         pthread_mutex_unlock(&beh_mutex);
+        httpdOutput(server, "start");
     }
     void end(httpd* server) {
-        if (!robot_on) return;
+        if (!robot_on) {
+            httpdOutput(server, "not started");
+            return;
+        }
         pthread_mutex_lock(&beh_mutex);
 
         Walking::GetInstance()->m_Joint.SetEnableBody(false);
@@ -31,6 +38,7 @@ extern "C" {
         robot_on = false;
 
         pthread_mutex_unlock(&beh_mutex);
+        httpdOutput(server, "end");
     }
 
     void walk(httpd* server) {
@@ -44,6 +52,7 @@ extern "C" {
         pthread_mutex_lock(&beh_mutex);
         Behaviour::GetInstance()->WalkStop();
         pthread_mutex_unlock(&beh_mutex);
+        httpdOutput(server, "walkstop");
     }
 
     void action(httpd* server) {
@@ -51,6 +60,7 @@ extern "C" {
         pthread_mutex_lock(&beh_mutex);
         Behaviour::GetInstance()->ActionNext(id);
         pthread_mutex_unlock(&beh_mutex);
+        httpdOutput(server, "action");
     }
 
 
@@ -64,6 +74,7 @@ extern "C" {
             if (robot_resting) {
                 pthread_mutex_lock(&beh_mutex);
                 while(Action::GetInstance()->IsRunning() == true) usleep(8000);
+                robot_resting = false;
                 pthread_mutex_unlock(&beh_mutex);
             }
             usleep(10000);

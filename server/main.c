@@ -10,7 +10,7 @@ int main() {
         fprintf(stderr, "Create sub thread error!\n");
         return -1;
     }
-    httpd* server = httpdCreate("127.0.0.1", 8090);
+    httpd* server = httpdCreate(NULL, 8090);
     httpdSetAccessLog(server, stdout);
     httpdSetErrorLog(server, stderr);
 
@@ -25,15 +25,19 @@ int main() {
 
     printf("Server Start.\n");
 
-    while(httpdGetConnection(server, NULL) == 1) {
-        if (httpdReadRequest(server) < 0) {
-            httpdEndRequest(server);
-            continue;
-        }
+    while(1) {
+        if (httpdGetConnection(server, NULL) == 1) {
+            if (httpdReadRequest(server) < 0) {
+                httpdEndRequest(server);
+                continue;
+            }
 
-        httpdProcessRequest(server);
-        httpdEndRequest(server);
+            httpdProcessRequest(server);
+            httpdEndRequest(server);
+        }
     }
+
+    printf("Server Exit.\n");
 
     exit(0);
 }
