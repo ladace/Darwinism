@@ -2,11 +2,22 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "httpd.h"
-#include "behav.h"
+#include "robot.h"
+
+void test(httpd* server) {
+    httpVar* v = httpdGetVariableByName(server, "name");
+    if (v) {
+        printf("Name value: %s\n", v->value);
+        httpdOutput(server, "Hello, $name.");
+    } else {
+        printf("No value provided.\n");
+        httpdOutput(server, "Hello, anonymous.");
+    }
+}
 
 int main() {
-    pthread_mutex_init(&beh_mutex, NULL);
-    if (pthread_create(&beh_tid, NULL, behaviour_func, NULL) != 0) {
+    pthread_mutex_init(&rbt_mutex, NULL);
+    if (pthread_create(&rbt_tid, NULL, robot_func, NULL) != 0) {
         fprintf(stderr, "Create sub thread error!\n");
         return -1;
     }
@@ -19,6 +30,8 @@ int main() {
     httpdAddCContent(server, "/", "walk",     HTTP_FALSE, NULL, walk    );
     httpdAddCContent(server, "/", "walkstop", HTTP_FALSE, NULL, walkstop);
     httpdAddCContent(server, "/", "action",   HTTP_FALSE, NULL, action  );
+
+    httpdAddCContent(server, "/", "test",     HTTP_FALSE, NULL, test    );
 
     httpdSetFileBase(server, "./www");
     httpdAddFileContent(server, "/", "index.html", HTTP_TRUE, NULL, "index.html");

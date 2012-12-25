@@ -1,12 +1,12 @@
 CFLAGS = $(INCLUDE_DIRS)
-CXXFLAGS +=	-O2 -DLINUX -g -Wall -fmessage-length=0 $(INCLUDE_DIRS)
+CXXFLAGS += -O2 -DLINUX -g -Wall -fmessage-length=0 $(INCLUDE_DIRS)
 INCLUDE_DIRS = -Ilib -I../MyActionEditor -I../Behaviour -I../../../include -I../../../../Framework/include
 LIBS += -lpthread -lncurses -lrt
 
 all: server
 
-server: main.o behav.o lib actionEditor.o darwin.a behav_lib
-	$(CXX) -o server main.o behav.o lib/httpd.a ../MyActionEditor/actionEditor.o ../Behaviour/lib.a ../../../lib/darwin.a $(LIBS)
+server: main.o robot.o lib actionEditor.o darwin.a behav_lib
+	$(CXX) -o server main.o robot.o lib/httpd.a ../MyActionEditor/actionEditor.o ../Behaviour/lib.a ../../../lib/darwin.a $(LIBS)
 
 run: server
 	./server

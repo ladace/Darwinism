@@ -6,8 +6,8 @@
 extern "C" {
 #endif
 
-extern pthread_t beh_tid;
-extern pthread_mutex_t beh_mutex;
+extern pthread_t rbt_tid;
+extern pthread_mutex_t rbt_mutex;
 
 void start(httpd* server);
 void end(httpd* server);
@@ -15,7 +15,7 @@ void walk(httpd* server);
 void walkstop(httpd* server);
 void action(httpd* server);
 
-void* behaviour_func(void*);
+void* robot_func(void*);
 
 #ifdef __cplusplus
 }
