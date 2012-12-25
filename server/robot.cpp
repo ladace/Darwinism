@@ -27,13 +27,13 @@ extern "C" {
         }
         pthread_mutex_lock(&rbt_mutex);
 
-        Behaviour::GetInstance();
+        Behaviour::GetInstance()->ActionNext(9);
         robot_on = true;
 
         pthread_mutex_unlock(&rbt_mutex);
         httpdOutput(server, "start");
     }
-    void end(httpd* server) {
+    void rest(httpd* server) {
         CHECK_ROBOT_ON 
         pthread_mutex_lock(&rbt_mutex);
 
@@ -45,7 +45,7 @@ extern "C" {
         robot_on = false;
 
         pthread_mutex_unlock(&rbt_mutex);
-        httpdOutput(server, "end");
+        httpdOutput(server, "rest");
     }
 
     void walk(httpd* server) {

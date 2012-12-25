@@ -25,11 +25,11 @@ int main() {
     httpdSetAccessLog(server, stdout);
     httpdSetErrorLog(server, stderr);
 
-    httpdAddCContent(server, "/", "start",    HTTP_FALSE, NULL, start   );
-    httpdAddCContent(server, "/", "end",      HTTP_FALSE, NULL, end     );
-    httpdAddCContent(server, "/", "walk",     HTTP_FALSE, NULL, walk    );
-    httpdAddCContent(server, "/", "walkstop", HTTP_FALSE, NULL, walkstop);
-    httpdAddCContent(server, "/", "action",   HTTP_FALSE, NULL, action  );
+    httpdAddCContent(server, "/behav", "start",    HTTP_FALSE, NULL, start   );
+    httpdAddCContent(server, "/behav", "rest",     HTTP_FALSE, NULL, rest    );
+    httpdAddCContent(server, "/behav", "walk",     HTTP_FALSE, NULL, walk    );
+    httpdAddCContent(server, "/behav", "walkstop", HTTP_FALSE, NULL, walkstop);
+    httpdAddCContent(server, "/behav", "action",   HTTP_FALSE, NULL, action  );
 
     httpdAddCContent(server, "/", "test",     HTTP_FALSE, NULL, test    );
 

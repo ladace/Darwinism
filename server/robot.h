@@ -9,8 +9,9 @@ extern "C" {
 extern pthread_t rbt_tid;
 extern pthread_mutex_t rbt_mutex;
 
+/* Behaviour functions */
 void start(httpd* server);
-void end(httpd* server);
+void rest(httpd* server);
 void walk(httpd* server);
 void walkstop(httpd* server);
 void action(httpd* server);
