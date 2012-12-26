@@ -173,9 +173,9 @@ void WalkerManager::WalkerManager::GetCurParSet(std::vector<double> &result) {
 }
 
 void WalkerManager::GetCurParSetNormalization(std::vector<double> &result, std::vector<double> &norResult) {
-	if (result.size() != PARAMETER_NUM) {
-		result.clear();
-		result.resize(PARAMETER_NUM);
+	if (norResult.size() != PARAMETER_NUM) {
+		norResult.clear();
+		norResult.resize(PARAMETER_NUM);
 	}
 	GetCurParSet(result);
 	for (int i=0;i<PARAMETER_NUM;i++) {

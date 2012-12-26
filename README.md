@@ -30,7 +30,9 @@
  * `/walk/start?id=<id>` Let him walk according to the parameter set specified by &lt;id&gt;.
  * `/walk/stop` The same as `/behav/stop-walk`.
  * `/walk/load-parset?id=<id>` Load the parameter set &lt;id&gt; on the robot. If &lt;id&gt; is not given, it will reload the current parameter set.
- * `/walk/save-parset?id=<id>` Save current parameters into the parameter set &lt;id&gt;. If &lt;id&gt; is not given, they will be saved into the current set.
+ * `/walk/save-parset?id=<id>` Save current parameters to the parameter set &lt;id&gt;. If &lt;id&gt; is not given, they will be saved into the current set.
+ * `/walk/save-new-parset` Save current parameters to a new parameter set. The new parameter set will be pushed at the end.
  * `/walk/del-parset?id=<id>` Delete the parameter set &lt;id&gt;. If &lt;id&gt; is not given, the current parameter set will be deleted.
  * `/walk/get-cur-parset` Get the values of all the parameters. The reponse will be a JSON array of floats.
  * `/walk/get-cur-parset-norm` Get the values and normalized values of all the parameters. The reponse will be a JSON array of two arrays, which are values and normalized values, respectively.
+ * `/walk/get-parset-n` Get how many parameter sets there are. The response will be a integer.

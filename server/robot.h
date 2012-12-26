@@ -23,10 +23,12 @@ void walk_get_param(httpd* server);
 void walk_set_param(httpd* server);
 void walk_load_parset(httpd* server);
 void walk_save_parset(httpd* server);
+void walk_save_new_parset(httpd* server);
 void walk_del_parset(httpd* server);
 void walk_start(httpd* server);
 void walk_get_cur_parset(httpd* server);
 void walk_get_cur_parset_norm(httpd* server);
+void walk_get_parset_num(httpd* server);
 
 #ifdef __cplusplus
 }

@@ -25,7 +25,6 @@ int main() {
     httpdSetAccessLog(server, stdout);
     httpdSetErrorLog(server, stderr);
 
-    httpdAddCContent(server, "/behav", "start",     HTTP_FALSE, NULL, start   );
     httpdAddCContent(server, "/behav", "rest",      HTTP_FALSE, NULL, rest    );
     httpdAddCContent(server, "/behav", "walk",      HTTP_FALSE, NULL, walk    );
     httpdAddCContent(server, "/behav", "stop-walk", HTTP_FALSE, NULL, walk_stop);
@@ -37,9 +36,11 @@ int main() {
     httpdAddCContent(server, "/walk",  "set-param",   HTTP_FALSE, NULL, walk_set_param);
     httpdAddCContent(server, "/walk",  "load-parset",           HTTP_FALSE, NULL, walk_load_parset);
     httpdAddCContent(server, "/walk",  "save-parset",           HTTP_FALSE, NULL, walk_save_parset);
+    httpdAddCContent(server, "/walk",  "save-new-parset",       HTTP_FALSE, NULL, walk_save_new_parset);
     httpdAddCContent(server, "/walk",  "del-parset",            HTTP_FALSE, NULL, walk_del_parset);
     httpdAddCContent(server, "/walk",  "get-cur-parset",        HTTP_FALSE, NULL, walk_get_cur_parset);
     httpdAddCContent(server, "/walk",  "get-cur-parset-norm",   HTTP_FALSE, NULL, walk_get_cur_parset_norm);
+    httpdAddCContent(server, "/walk",  "get-parset-n",          HTTP_FALSE, NULL, walk_get_parset_num);
 
     httpdAddCContent(server, "/", "test",     HTTP_FALSE, NULL, test    );
 
