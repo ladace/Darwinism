@@ -14,7 +14,7 @@ if (!robot_on) {\
 
 /* Helper function */
 int get_param_int(httpd* server, const char* name, int* p) {
-    httpVar* var = httpdGetVariableByName(server, name);
+    httpVar* var = httpdGetVariableByName(server, const_cast<char*>(name));
     if (!var) {
         return 0;
     }
@@ -41,21 +41,21 @@ extern "C" {
             httpdOutput(server, "Already started.");
             return;
         }
+
         pthread_mutex_lock(&rbt_mutex);
-
-        Behaviour::GetInstance();
-        robot_on = true;
-
+            Behaviour::GetInstance();
+            robot_on = true;
         pthread_mutex_unlock(&rbt_mutex);
+
         httpdOutput(server, "start");
     }
     void rest(httpd* server) {
         CHECK_ROBOT_ON 
+
         pthread_mutex_lock(&rbt_mutex);
-
-        Behaviour::GetInstance()->ActionNext(Behaviour::SIT_DOWN);
-
+            Behaviour::GetInstance()->ActionNext(Behaviour::SIT_DOWN);
         pthread_mutex_unlock(&rbt_mutex);
+
         httpdOutput(server, "rest");
     }
 
@@ -68,22 +68,26 @@ extern "C" {
             sscanf(motion_var->value, "%d", &id);
 
             pthread_mutex_lock(&rbt_mutex);
-            Behaviour::GetInstance()->Walk(id);
+                Behaviour::GetInstance()->Walk(id);
             pthread_mutex_unlock(&rbt_mutex);
+
             httpdOutput(server, "walk - motion: $motion");
         } else {
             pthread_mutex_lock(&rbt_mutex);
-            Behaviour::GetInstance()->Walk();
+                Behaviour::GetInstance()->Walk();
             pthread_mutex_unlock(&rbt_mutex);
+
             httpdOutput(server, "walk (no motion specified)");
         }
     }
 
-    void stop_walk(httpd* server) {
+    void walk_stop(httpd* server) {
         CHECK_ROBOT_ON
+
         pthread_mutex_lock(&rbt_mutex);
-        Behaviour::GetInstance()->WalkStop();
+            Behaviour::GetInstance()->WalkStop();
         pthread_mutex_unlock(&rbt_mutex);
+
         httpdOutput(server, "stopped");
     }
 
@@ -93,8 +97,9 @@ extern "C" {
         int ret = get_param_int(server, "id", &id);
         if (ret == 1) {
             pthread_mutex_lock(&rbt_mutex);
-            Behaviour::GetInstance()->ActionNext(id);
+                Behaviour::GetInstance()->ActionNext(id);
             pthread_mutex_unlock(&rbt_mutex);
+
             httpdOutput(server, "Action $id");
         } else {
             if (ret == 0)
@@ -142,7 +147,7 @@ extern "C" {
             param_map_t::iterator it = param_map.find(param_name);
             if (it != param_map.end()) {
                 pthread_mutex_lock(&rbt_mutex);
-                double v = WalkerManager::GetInstance()->GetParameterValue(it->second);
+                    double v = WalkerManager::GetInstance()->GetParameterValue(it->second);
                 pthread_mutex_unlock(&rbt_mutex);
 
                 static char buf[50];
@@ -169,8 +174,8 @@ extern "C" {
             param_map_t::iterator it = param_map.find(param_name);
             if (it != param_map.end()) {
                 pthread_mutex_lock(&rbt_mutex);
-                WalkerManager::GetInstance()->SetParameter(it->second, value);
-                //TODO save parset file?
+                    WalkerManager::GetInstance()->SetParameter(it->second, value);
+                    //TODO save parset file?
                 pthread_mutex_unlock(&rbt_mutex);
 
                 httpdOutput(server, "Parameter $param has been set as value.");
@@ -185,14 +190,16 @@ extern "C" {
         int ret = get_param_int(server, "id", &id);
         if (ret == 1) {
             pthread_mutex_lock(&rbt_mutex);
-            WalkerManager::GetInstance()->LoadParSet(id);
+                WalkerManager::GetInstance()->LoadParSet(id);
             pthread_mutex_unlock(&rbt_mutex);
+
             httpdOutput(server, "ParSet loaded");
         } else {
             if (ret == 0) {
                 pthread_mutex_lock(&rbt_mutex);
-                WalkerManager::GetInstance()->LoadParSet();
+                    WalkerManager::GetInstance()->LoadParSet();
                 pthread_mutex_unlock(&rbt_mutex);
+
                 httpdOutput(server, "ParSet loaded");
             } else
                 httpdOutput(server, "ID is invalid!");
@@ -206,14 +213,16 @@ extern "C" {
 
         if (ret == 1) {
             pthread_mutex_lock(&rbt_mutex);
-            WalkerManager::GetInstance()->SaveParSet(id);
+                WalkerManager::GetInstance()->SaveParSet(id);
             pthread_mutex_unlock(&rbt_mutex);
+
             httpdOutput(server, "ParSet saved");
         } else {
             if (ret == 0) {
                 pthread_mutex_lock(&rbt_mutex);
-                WalkerManager::GetInstance()->SaveParSet();
+                    WalkerManager::GetInstance()->SaveParSet();
                 pthread_mutex_unlock(&rbt_mutex);
+
                 httpdOutput(server, "ParSet saved");
             } else
                 httpdOutput(server, "ID is invalid!");
@@ -228,19 +237,20 @@ extern "C" {
 
         if (ret == 1) {
             pthread_mutex_lock(&rbt_mutex);
-            if (WalkerManager::GetInstance()->DelParSet(id))
-                httpdOutput(server, "ParSet deleted");
-            else
-                httpdOutput(server, "Failed to delete ParSet!");
+                if (WalkerManager::GetInstance()->DelParSet(id))
+                    httpdOutput(server, "ParSet deleted");
+                else
+                    httpdOutput(server, "Failed to delete ParSet!");
             pthread_mutex_unlock(&rbt_mutex);
         } else {
             if (ret == 0) {
                 pthread_mutex_lock(&rbt_mutex);
-                if (WalkerManager::GetInstance()->DelParSet())
-                    httpdOutput(server, "ParSet deleted");
-                else
-                    httpdOutput("Failed to delete ParSet!");
+                    if (WalkerManager::GetInstance()->DelParSet())
+                        httpdOutput(server, "ParSet deleted");
+                    else
+                        httpdOutput(server, "Failed to delete ParSet!");
                 pthread_mutex_unlock(&rbt_mutex);
+
                 httpdOutput(server, "ParSet deleted");
             } else
                 httpdOutput(server, "ID is invalid!");
@@ -252,15 +262,17 @@ extern "C" {
         int ret = get_param_int(server, "id", &id);
         if (ret == 1) {
             pthread_mutex_lock(&rbt_mutex);
-            WalkerManager::GetInstance()->LoadParSet(id);
-            Behaviour::GetInstance()->Walk();
+                WalkerManager::GetInstance()->LoadParSet(id);
+                Behaviour::GetInstance()->Walk();
             pthread_mutex_unlock(&rbt_mutex);
+
             httpdOutput(server, "started to walk: $id");
         } else {
             if (ret == 0) {
                 pthread_mutex_lock(&rbt_mutex);
-                Behaviour::GetInstance()->Walk();
-                pthread_mutex_unlock(&rbt_mutex);
+                    Behaviour::GetInstance()->Walk();
+	        pthread_mutex_unlock(&rbt_mutex);
+
                 httpdOutput(server, "started to walk");
             } else
                 httpdOutput(server, "ID is invalid!");
@@ -270,8 +282,9 @@ extern "C" {
     void walk_get_cur_parset(httpd* server) {
         int id;
         std::vector<double> pars;
+
         pthread_mutex_lock(&rbt_mutex);
-        WalkerManager::GetInstance->GetCurParSet(pars);
+            WalkerManager::GetInstance()->GetCurParSet(pars);
         pthread_mutex_unlock(&rbt_mutex);
 
         std::ostringstream os;
@@ -280,14 +293,14 @@ extern "C" {
             os << *it << ',';
         }
         os << ']';
-        httpdOutput(server, os.str().c_str());
+        httpdOutput(server, const_cast<char*>(os.str().c_str()));
     }
 
     void walk_get_cur_parset_norm(httpd* server) {
         int id;
         std::vector<double> pars, pars_norm;
         pthread_mutex_lock(&rbt_mutex);
-        WalkerManager::GetInstance->GetCurParSetNormalization(pars, pars_norm);
+            WalkerManager::GetInstance()->GetCurParSetNormalization(pars, pars_norm);
         pthread_mutex_unlock(&rbt_mutex);
 
         std::ostringstream os;
@@ -298,7 +311,7 @@ extern "C" {
         for (std::vector<double>::iterator it = pars_norm.begin(); it != pars_norm.end(); ++it)
             os << *it << ',';
         os << ']';
-        httpdOutput(server, os.str().c_str());
+        httpdOutput(server, const_cast<char*>(os.str().c_str()));
     }
 
     //walk_stop is defined above

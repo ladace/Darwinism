@@ -15,12 +15,18 @@ void* robot_func(void*);
 void start(httpd* server);
 void rest(httpd* server);
 void walk(httpd* server);
-void walkstop(httpd* server);
+void walk_stop(httpd* server); // also is walktuning functions
 void action(httpd* server);
 
 /* Walktuning functions */
-void set_walk_param(httpd* server);
-void get_walk_param(httpd* server);
+void walk_get_param(httpd* server);
+void walk_set_param(httpd* server);
+void walk_load_parset(httpd* server);
+void walk_save_parset(httpd* server);
+void walk_del_parset(httpd* server);
+void walk_start(httpd* server);
+void walk_get_cur_parset(httpd* server);
+void walk_get_cur_parset_norm(httpd* server);
 
 #ifdef __cplusplus
 }
