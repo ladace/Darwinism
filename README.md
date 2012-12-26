@@ -4,10 +4,9 @@
 
  * `/behav/start` Start the robot, and the robot can do other things. 
  * `/behav/rest` Let him rest.
- * `/behav/walk?motion=<id>` The parameter is optional. The 'motion' parameter &lt;id&gt; is a number 0~7, specifying how the robot walks, forward or backward, or turning around. TODO change the 'motion' parameter into string.
+ * `/behav/walk?motion=<id>` The parameter is optional. The 'motion' parameter &lt;id&gt; is a number 0~7, specifying how the robot walks, forward or backward, or turning around. **TODO** change the 'motion' parameter into string.
  * `/behav/stop-walk` Stop walking.
  * `/behav/action?id=<id>` Play an action on the robot. &lt;id&gt; is a number specifying the action page to be played.
-
  * `/walk/set-param?param=<name>&value=<v>` Set the parameter of `WalkingManager`. &lt;v&gt; must be a float number.
  * `/walk/get-param?param=<name>` Get the parameter of `WalkingManager`. The response will be a float number. &lt;param&gt; is a string in the following list:
      - `X-OFFSET`
@@ -28,7 +27,6 @@
      - `SWING-TOPDOWN`
      - `PELVIS-OFFSET`
      - `ARM-SWING-GAIN`
-     - `PARAMETER-NUM`
  * `/walk/start?id=<id>` Let him walk according to the parameter set specified by &lt;id&gt;.
  * `/walk/stop` The same as `/behav/stop-walk`.
  * `/walk/load-parset?id=<id>` Load the parameter set &lt;id&gt; on the robot. If &lt;id&gt; is not given, it will reload the current parameter set.
