@@ -9,8 +9,7 @@
  * `/behav/action?id=<id>` Play an action on the robot. &lt;id&gt; is a number specifying the action page to be played.
 
  * `/walk/set-param?param=<name>&value=<v>` Set the parameter of `WalkingManager`. &lt;v&gt; must be a float number.
- * `/walk/get-param?param=<name>` Get the parameter of `WalkingManager`. The response will be a float number.
-   &lt;param&gt; is a string in the following list.
+ * `/walk/get-param?param=<name>` Get the parameter of `WalkingManager`. The response will be a float number. &lt;param&gt; is a string in the following list:
      - `X-OFFSET`
      - `Y-OFFSET`
      - `Z-OFFSET`

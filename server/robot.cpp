@@ -4,11 +4,23 @@
 #include "WalkerManager.h"
 #include <cstdlib>
 #include <map>
+#include <sstream>
 
 #define CHECK_ROBOT_ON \
 if (!robot_on) {\
     httpdOutput(server, "Robot not ON!");\
     return;\
+}
+
+/* Helper function */
+int get_param_int(httpd* server, const char* name, int* p) {
+    httpVar* var = httpdGetVariableByName(server, name);
+    if (!var) {
+        return 0;
+    }
+    if (sscanf(var->value, "%d", p) == 0)
+        return -1;
+    return 1;
 }
 
 extern "C" {
@@ -48,13 +60,13 @@ extern "C" {
     }
 
     void walk(httpd* server) {
-        CHECK_ROBOT_ON 
+        CHECK_ROBOT_ON
         httpVar* motion_var = httpdGetVariableByName(server, "motion");
         if (motion_var) {
             //now use id
             int id;
             sscanf(motion_var->value, "%d", &id);
-            
+
             pthread_mutex_lock(&rbt_mutex);
             Behaviour::GetInstance()->Walk(id);
             pthread_mutex_unlock(&rbt_mutex);
@@ -67,29 +79,29 @@ extern "C" {
         }
     }
 
-    void walkstop(httpd* server) {
-        CHECK_ROBOT_ON 
+    void stop_walk(httpd* server) {
+        CHECK_ROBOT_ON
         pthread_mutex_lock(&rbt_mutex);
         Behaviour::GetInstance()->WalkStop();
         pthread_mutex_unlock(&rbt_mutex);
-        httpdOutput(server, "walkstop");
+        httpdOutput(server, "stopped");
     }
 
     void action(httpd* server) {
-        CHECK_ROBOT_ON 
-        httpVar* id_var = httpdGetVariableByName(server, "id");//TODO
-        if (id_var) {
-            int id;
-            if (0 == sscanf(id_var->value, "%d", &id)) {
-                httpdOutput(server, "The value is invalid!");
-                return;
-            }
+        CHECK_ROBOT_ON
+        int id;
+        int ret = get_param_int(server, "id", &id);
+        if (ret == 1) {
             pthread_mutex_lock(&rbt_mutex);
             Behaviour::GetInstance()->ActionNext(id);
             pthread_mutex_unlock(&rbt_mutex);
             httpdOutput(server, "Action $id");
-        } else
-            httpdOutput(server, "Please specify the action ID!");
+        } else {
+            if (ret == 0)
+                httpdOutput(server, "Please specify the action ID!");
+            else
+                httpdOutput(server, "The value is invalid!");
+        }
     }
 
     /* Walk Tuning */
@@ -121,12 +133,12 @@ extern "C" {
     typedef std::map<std::string, int> param_map_t;
     param_map_t param_map;
 
-    void get_walk_param(httpd* server) {
+    void walk_get_param(httpd* server) {
         CHECK_ROBOT_ON
         httpVar* param_var = httpdGetVariableByName(server, "param");
         if (param_var) {
             const char* param_name = param_var->value;
-            
+
             param_map_t::iterator it = param_map.find(param_name);
             if (it != param_map.end()) {
                 pthread_mutex_lock(&rbt_mutex);
@@ -141,7 +153,7 @@ extern "C" {
             httpdOutput(server, "Please specify the param name!");
     }
 
-    void set_walk_param(httpd* server) {
+    void walk_set_param(httpd* server) {
         CHECK_ROBOT_ON
         httpVar *param_var = httpdGetVariableByName(server, "param"),
                 *value_var = httpdGetVariableByName(server, "value");
@@ -158,6 +170,7 @@ extern "C" {
             if (it != param_map.end()) {
                 pthread_mutex_lock(&rbt_mutex);
                 WalkerManager::GetInstance()->SetParameter(it->second, value);
+                //TODO save parset file?
                 pthread_mutex_unlock(&rbt_mutex);
 
                 httpdOutput(server, "Parameter $param has been set as value.");
@@ -165,6 +178,130 @@ extern "C" {
         } else
             httpdOutput(server, "Please specify the param name and the value!");
     }
+
+    void walk_load_parset(httpd* server) {
+        CHECK_ROBOT_ON
+        int id;
+        int ret = get_param_int(server, "id", &id);
+        if (ret == 1) {
+            pthread_mutex_lock(&rbt_mutex);
+            WalkerManager::GetInstance()->LoadParSet(id);
+            pthread_mutex_unlock(&rbt_mutex);
+            httpdOutput(server, "ParSet loaded");
+        } else {
+            if (ret == 0) {
+                pthread_mutex_lock(&rbt_mutex);
+                WalkerManager::GetInstance()->LoadParSet();
+                pthread_mutex_unlock(&rbt_mutex);
+                httpdOutput(server, "ParSet loaded");
+            } else
+                httpdOutput(server, "ID is invalid!");
+        }
+    }
+
+    void walk_save_parset(httpd* server) {
+        CHECK_ROBOT_ON
+        int id;
+        int ret = get_param_int(server, "id", &id);
+
+        if (ret == 1) {
+            pthread_mutex_lock(&rbt_mutex);
+            WalkerManager::GetInstance()->SaveParSet(id);
+            pthread_mutex_unlock(&rbt_mutex);
+            httpdOutput(server, "ParSet saved");
+        } else {
+            if (ret == 0) {
+                pthread_mutex_lock(&rbt_mutex);
+                WalkerManager::GetInstance()->SaveParSet();
+                pthread_mutex_unlock(&rbt_mutex);
+                httpdOutput(server, "ParSet saved");
+            } else
+                httpdOutput(server, "ID is invalid!");
+        }
+    }
+
+    void walk_del_parset(httpd* server) {
+        CHECK_ROBOT_ON
+
+        int id;
+        int ret = get_param_int(server, "id", &id);
+
+        if (ret == 1) {
+            pthread_mutex_lock(&rbt_mutex);
+            if (WalkerManager::GetInstance()->DelParSet(id))
+                httpdOutput(server, "ParSet deleted");
+            else
+                httpdOutput(server, "Failed to delete ParSet!");
+            pthread_mutex_unlock(&rbt_mutex);
+        } else {
+            if (ret == 0) {
+                pthread_mutex_lock(&rbt_mutex);
+                if (WalkerManager::GetInstance()->DelParSet())
+                    httpdOutput(server, "ParSet deleted");
+                else
+                    httpdOutput("Failed to delete ParSet!");
+                pthread_mutex_unlock(&rbt_mutex);
+                httpdOutput(server, "ParSet deleted");
+            } else
+                httpdOutput(server, "ID is invalid!");
+        }
+    }
+
+    void walk_start(httpd* server) {
+        int id;
+        int ret = get_param_int(server, "id", &id);
+        if (ret == 1) {
+            pthread_mutex_lock(&rbt_mutex);
+            WalkerManager::GetInstance()->LoadParSet(id);
+            Behaviour::GetInstance()->Walk();
+            pthread_mutex_unlock(&rbt_mutex);
+            httpdOutput(server, "started to walk: $id");
+        } else {
+            if (ret == 0) {
+                pthread_mutex_lock(&rbt_mutex);
+                Behaviour::GetInstance()->Walk();
+                pthread_mutex_unlock(&rbt_mutex);
+                httpdOutput(server, "started to walk");
+            } else
+                httpdOutput(server, "ID is invalid!");
+        }
+    }
+
+    void walk_get_cur_parset(httpd* server) {
+        int id;
+        std::vector<double> pars;
+        pthread_mutex_lock(&rbt_mutex);
+        WalkerManager::GetInstance->GetCurParSet(pars);
+        pthread_mutex_unlock(&rbt_mutex);
+
+        std::ostringstream os;
+        os << '[';
+        for (std::vector<double>::iterator it = pars.begin(); it != pars.end(); ++it) {
+            os << *it << ',';
+        }
+        os << ']';
+        httpdOutput(server, os.str().c_str());
+    }
+
+    void walk_get_cur_parset_norm(httpd* server) {
+        int id;
+        std::vector<double> pars, pars_norm;
+        pthread_mutex_lock(&rbt_mutex);
+        WalkerManager::GetInstance->GetCurParSetNormalization(pars, pars_norm);
+        pthread_mutex_unlock(&rbt_mutex);
+
+        std::ostringstream os;
+        os << "[[";
+        for (std::vector<double>::iterator it = pars.begin(); it != pars.end(); ++it)
+            os << *it << ',';
+        os << "],[";
+        for (std::vector<double>::iterator it = pars_norm.begin(); it != pars_norm.end(); ++it)
+            os << *it << ',';
+        os << ']';
+        httpdOutput(server, os.str().c_str());
+    }
+
+    //walk_stop is defined above
 
     void initialize() {
         int n_param = sizeof(param_list) / sizeof(_param);
