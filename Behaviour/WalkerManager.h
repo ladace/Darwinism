@@ -63,10 +63,11 @@ namespace Robot
 		void SetSpeed(int x, int y, int a);
 
 		double GetParameterValue(int parameterID);
-		double ChkParameterRange(int parameterID, double value);
 		void SetParameter(int parameterID, double value);
 		void ChgParameter(int parameterID, double delta);
 		void SetParameterNormalization(int parameterID, double value);//the value must be in [0,1]
+
+		double ChkParameterRange(int parameterID, double value);
 
 		void PrintParSet();
 
