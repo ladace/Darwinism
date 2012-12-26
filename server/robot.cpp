@@ -162,7 +162,7 @@ extern "C" {
                 WalkerManager::GetInstance()->LoadParSet(id);
             pthread_mutex_unlock(&rbt_mutex);
 
-            httpdOutput(server, "ParSet loaded");
+	    walk_get_cur_parset(server); // output the parameters
         } else {
             if (ret == 0) {
                 pthread_mutex_lock(&rbt_mutex);
@@ -171,6 +171,7 @@ extern "C" {
 
                 walk_get_cur_parset(server); // output the parameters
             } else
+                httpdSetResponse(server, "400 Bad Request");
                 httpdOutput(server, "ID is invalid!");
         }
     }

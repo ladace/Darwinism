@@ -1,5 +1,314 @@
+<!DOCTYPE html>
 <html>
-    <body>
-        Hello World!
-    </body>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>Darwin Controller v0.1</title>
+	<link rel="stylesheet" href="css/layout.css" type="text/css" />
+	<link rel="stylesheet" href="css/custom-theme/jquery-ui-1.9.2.custom.min.css"/>
+    <script src="js/jquery-1.8.3.js"></script>
+    <script src="js/jquery-ui-1.9.2.custom.js"></script>
+	<script src="js/globalize.js"></script>
+	<script src="js/functions.js"></script>
+	<script>
+		$(function(){
+			$(".slider").slider({
+				slide:function(event, ui){
+					spinner_name = "#"+this.id.split("_")[0]+"_value";
+					$(spinner_name).spinner("value", ui.value);
+				},
+				stop:function(event, ui){
+					para_num = parseInt(this.id.split("_")[0].substring(4))-1;
+					current_value = ui.value;
+					if (changed_conf[para_num] == current_value) return;
+					else changed_conf[para_num] = current_value;
+					$user_output = document.getElementById("user_output");
+					$attr_name = para_names[para_num];
+					update_output($user_output, "Attribute "+$attr_name+" changed to : "+current_value+"%.");
+					send_attr_change($attr_name, current_value);
+				}
+			});
+			$(".spinner").spinner({
+				step:0.1,
+				min:0,
+				max:100,
+				numberFormat:"n1",
+				spin:function(event, ui){
+					slider_name = "#"+this.id.split("_")[0]+"_slider";
+					$(slider_name).slider("value", ui.value);
+				},
+				stop:function(event, ui){
+					para_num = parseInt(this.id.split("_")[0].substring(4))-1;
+					current_value = this.value;
+					if (changed_conf[para_num] == current_value) return;
+					else changed_conf[para_num] = current_value;
+					$user_output = document.getElementById("user_output");
+					$attr_name = para_names[para_num];
+					update_output($user_output, "Attribute "+$attr_name+" changed to : "+current_value+"%.");
+					send_attr_change($attr_name, current_value);
+				}
+			});
+			$("button").button();
+			$(".selectable").selectable({
+				cancel:".ui-selected",
+				stop:function(event, ui){
+					$(event.target).children('.ui-selected').not(':first').removeClass('ui-selected');
+				}
+			});
+			$("#configuration_list").dblclick(function(){
+				load_conf($("#configuration_list .ui-selected").html().split(" ")[1]);
+			});
+		});
+		$(document).ready(function(){
+			$menu_li = $("#menu li");
+			$menu_li_a = $("#menu li a[href!='#']");
+			var animSpeed=256;
+			var hoverTextColor="#ffffff";
+			var hoverBackgroundColor="#808080";
+			$menu_li_a.hover(function(){
+				var $this=$(this);
+				$this.stop().animate({color: hoverTextColor}, animSpeed);
+			},function(){
+				var $this=$(this);
+				$this.stop().animate({color: hoverBackgroundColor}, animSpeed);
+			});
+			$menu_li.hover(function() {
+				var $this=$(this);
+				$this.stop().animate({backgroundColor: hoverBackgroundColor}, animSpeed);
+			},function() {
+				var $this=$(this);
+				$this.stop().animate({backgroundColor: hoverTextColor}, animSpeed);
+			});
+		});
+	</script>
+</head>
+
+<body>
+	<div id="container">
+		<div id="header">
+			<h1>Darwin Controller v0.1</h1>
+		</div>
+		<div id="menu">
+			<ul>
+				<li><a href="#" style="color:white; background:gray;">Tuning Mode</a></li>
+				<li><a href="./action_mode.html">Action Mode</a></li>
+				<li><a href="./control_mode.html">Control Mode</a></li>
+			</ul>
+			<div class="clear"></div>
+		</div>
+		<div id="content">
+			<table style="float:left" cellpadding="2px">
+				<tr>
+					<td align="right">X offset :</td>
+					<td width="150px" colspan="2">
+						<div class="slider" id="para1_slider" style="margin-left:10px; margin-right:10px;"/>
+					</td>
+					<td colspan="2">
+						<input class="spinner" id="para1_value" value="0" style="width:50px; text-align:right"/>
+					</td>
+				</tr>
+				<tr>
+					<td align="right">Y offset :</td>
+					<td width="150px" colspan="2">
+						<div class="slider" id="para2_slider" style="margin-left:10px; margin-right:10px;"/>
+					</td>
+					<td colspan="2">
+						<input class="spinner" id="para2_value" value="0" style="width:50px; text-align:right"/>
+					</td>
+				</tr>
+				<tr>
+					<td align="right">Z offset :</td>
+					<td width="150px" colspan="2">
+						<div class="slider" id="para3_slider" style="margin-left:10px; margin-right:10px;"/>
+					</td>
+					<td colspan="2">
+						<input class="spinner" id="para3_value" value="0" style="width:50px; text-align:right"/>
+					</td>
+				</tr>
+				<tr>
+					<td align="right">Roll offset :</td>
+					<td width="150px" colspan="2">
+						<div class="slider" id="para4_slider" style="margin-left:10px; margin-right:10px;"/>
+					</td>
+					<td colspan="2">
+						<input class="spinner" id="para4_value" value="0" style="width:50px; text-align:right"/>
+					</td>
+				</tr>
+				<tr>
+					<td align="right">Pitch offset :</td>
+					<td width="150px" colspan="2">
+						<div class="slider" id="para5_slider" style="margin-left:10px; margin-right:10px;"/>
+					</td>
+					<td colspan="2">
+						<input class="spinner" id="para5_value" value="0" style="width:50px; text-align:right"/>
+					</td>
+				</tr>
+				<tr>
+					<td align="right">Yaw offset :</td>
+					<td width="150px" colspan="2">
+						<div class="slider" id="para6_slider" style="margin-left:10px; margin-right:10px;"/>
+					</td>
+					<td colspan="2">
+						<input class="spinner" id="para6_value" value="0" style="width:50px; text-align:right"/>
+					</td>
+				</tr>
+				<tr>
+					<td align="right">Hip pitch offset :</td>
+					<td width="150px" colspan="2">
+						<div class="slider" id="para7_slider" style="margin-left:10px; margin-right:10px;"/>
+					</td>
+					<td colspan="2">
+						<input class="spinner" id="para7_value" value="0" style="width:50px; text-align:right"/>
+					</td>
+				</tr>
+				<tr>
+					<td align="right">Period time :</td>
+					<td width="150px" colspan="2">
+						<div class="slider" id="para8_slider" style="margin-left:10px; margin-right:10px;"/>
+					</td>
+					<td colspan="2">
+						<input class="spinner" id="para8_value" value="0" style="width:50px; text-align:right"/>
+					</td>
+				</tr>
+				<tr>
+					<td align="right">DSP ratio :</td>
+					<td width="150px" colspan="2">
+						<div class="slider" id="para9_slider" style="margin-left:10px; margin-right:10px;"/>
+					</td>
+					<td colspan="2">
+						<input class="spinner" id="para9_value" value="0" style="width:50px; text-align:right"/>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="5" align="center">
+						<button id="walk_button" onclick="walk_switch()">Walk!</button>
+					</td>
+				</tr>
+			</table>
+			<table frame="vsides" style="float:left" cellpadding="2px">
+				<tr>
+					<td align="right">Step forward/back ratio :</td>
+					<td width="150px" colspan="2">
+						<div class="slider" id="para10_slider" style="margin-left:10px; margin-right:10px;"/>
+					</td>
+					<td colspan="2">
+						<input class="spinner" id="para10_value" value="0" style="width:50px; text-align:right"/>
+					</td>
+				</tr>
+				<tr>
+					<td align="right">Step forward/back :</td>
+					<td width="150px" colspan="2">
+						<div class="slider" id="para11_slider" style="margin-left:10px; margin-right:10px;"/>
+					</td>
+					<td colspan="2">
+						<input class="spinner" id="para11_value" value="0" style="width:50px; text-align:right"/>
+					</td>
+				</tr>
+				<tr>
+					<td align="right">Step right/left :</td>
+					<td width="150px" colspan="2">
+						<div class="slider" id="para12_slider" style="margin-left:10px; margin-right:10px;"/>
+					</td>
+					<td colspan="2">
+						<input class="spinner" id="para12_value" value="0" style="width:50px; text-align:right"/>
+					</td>
+				</tr>
+				<tr>
+					<td align="right">Step direction :</td>
+					<td width="150px" colspan="2">
+						<div class="slider" id="para13_slider" style="margin-left:10px; margin-right:10px;"/>
+					</td>
+					<td colspan="2">
+						<input class="spinner" id="para13_value" value="0" style="width:50px; text-align:right"/>
+					</td>
+				</tr>
+				<tr>
+					<td align="right">Foot height :</td>
+					<td width="150px" colspan="2">
+						<div class="slider" id="para14_slider" style="margin-left:10px; margin-right:10px;"/>
+					</td>
+					<td colspan="2">
+						<input class="spinner" id="para14_value" value="0" style="width:50px; text-align:right"/>
+					</td>
+				</tr>
+				<tr>
+					<td align="right">Swing right/left :</td>
+					<td width="150px" colspan="2">
+						<div class="slider" id="para15_slider" style="margin-left:10px; margin-right:10px;"/>
+					</td>
+					<td colspan="2">
+						<input class="spinner" id="para15_value" value="0" style="width:50px; text-align:right"/>
+					</td>
+				</tr>
+				<tr>
+					<td align="right">Swing top/down :</td>
+					<td width="150px" colspan="2">
+						<div class="slider" id="para16_slider" style="margin-left:10px; margin-right:10px;"/>
+					</td>
+					<td colspan="2">
+						<input class="spinner" id="para16_value" value="0" style="width:50px; text-align:right"/>
+					</td>
+				</tr>
+				<tr>
+					<td align="right">Pelvis offset :</td>
+					<td width="150px" colspan="2">
+						<div class="slider" id="para17_slider" style="margin-left:10px; margin-right:10px;"/>
+					</td>
+					<td colspan="2">
+						<input class="spinner" id="para17_value" value="0" style="width:50px; text-align:right"/>
+					</td>
+				</tr>
+				<tr>
+					<td align="right">Arm swing gain :</td>
+					<td width="150px" colspan="2">
+						<div class="slider" id="para18_slider" style="margin-left:10px; margin-right:10px;"/>
+					</td>
+					<td colspan="2">
+						<input class="spinner" id="para18_value" value="0" style="width:50px; text-align:right"/>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="5" align="center">
+						<button onclick="reset_attrs()">Reset</button>
+					</td>
+				</tr>
+			</table>
+			<div align="center">
+				<div style="overflow:auto; height:280px; margin-bottom:4px; padding:4px; border-bottom:1px solid gray">
+					<ul class="selectable" id="configuration_list">
+						<li class="ui-widget-content">Conf 1</li>
+						<li class="ui-widget-content">Conf 2</li>
+						<li class="ui-widget-content">Conf 3</li>
+						<li class="ui-widget-content">Conf 4</li>
+						<li class="ui-widget-content">Conf 5</li>
+						<li class="ui-widget-content">Conf 6</li>
+						<li class="ui-widget-content">Conf 7</li>
+						<li class="ui-widget-content">Conf 8</li>
+						<li class="ui-widget-content">Conf 9</li>
+						<li class="ui-widget-content">Conf 10</li>
+						<li class="ui-widget-content">Conf 11</li>
+						<li class="ui-widget-content">Conf 12</li>
+						<li class="ui-widget-content">Conf 13</li>
+						<li class="ui-widget-content">Conf 14</li>
+						<li class="ui-widget-content">Conf 15</li>
+					</ul>
+				</div>
+				<button onclick="save_conf()">Save</button>
+				<button onclick="add_conf()">Add</button>
+				<button onclick="del_conf()">Delete</button>
+			</div>
+			<div class="clear"/>
+			<div style="border-top:1px solid gray; padding:0px; overflow:auto;">
+				<div style="float:left; width:49%; padding:4px; border-right:1px solid gray; margin:0px">
+					System Output:<br/>
+					<textarea id="system_output" readonly style="overflow:hidden;"></textarea>
+				</div>
+				<div style="float:left; width:49%; padding:4px; margin-left:3px">
+					User Output:<br/>
+					<textarea id="user_output" readonly style="overflow:hidden;"></textarea>
+				</div>
+			</div>
+		</div>
+		<div id="footer">Copyright 2012 by Room301</div>
+	</div>
+</body>
 </html>

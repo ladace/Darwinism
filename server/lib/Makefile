@@ -1,7 +1,7 @@
 OBJ_SRC=api.c version.c protocol.c ip_acl.c
 OBJ=$(OBJ_SRC:%.c=%.o)
 
-all:httpd.a
+all: httpd.a
 
 httpd.a: $(OBJ)
 	ar cr httpd.a $(OBJ)

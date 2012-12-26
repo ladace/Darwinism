@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>Darwin Controller</title>
+	<link rel="stylesheet" href="css/layout.css" type="text/css" />
+	<link rel="stylesheet" href="css/custom-theme/jquery-ui-1.9.2.custom.min.css"/>
+    <script src="js/jquery-1.8.3.js"></script>
+    <script src="js/jquery-ui-1.9.2.custom.js"></script>
+	<script>
+		$(function(){
+			$("#videoContents").tabs();
+			$("button").button();
+		});
+		$(document).ready(function(){
+			$menu_li = $("#menu li");
+			$menu_li_a = $("#menu li a[href!='#']");
+			var animSpeed=256;
+			var hoverTextColor="#ffffff";
+			var hoverBackgroundColor="#808080";
+			$menu_li_a.hover(function() {
+				var $this=$(this);
+				$this.stop().animate({color: hoverTextColor}, animSpeed);
+			},function(){
+				var $this=$(this);
+				$this.stop().animate({color: hoverBackgroundColor}, animSpeed);
+			});
+			$menu_li.hover(function() {
+				var $this=$(this);
+				$this.stop().animate({backgroundColor: hoverBackgroundColor}, animSpeed);
+			},function() {
+				var $this=$(this);
+				$this.stop().animate({backgroundColor: hoverTextColor}, animSpeed);
+			});
+		});
+	</script>
+</head>
+
+<body>
+	<div id="container">
+		<div id="header">
+			<h1>Darwin Controller v0.1</h1>
+		</div>
+		<div id="menu">
+			<ul>
+				<li><a href="./index.html">Tuning Mode</a></li>
+				<li><a href="./action_mode.html">Action Mode</a></li>
+				<li><a href="#" style="color:white; background:gray;">Control Mode</a></li>
+			</ul>
+			<div class="clear"></div>
+		</div>
+		<div id="content">
+			<div id="basic_control" style="float:left;">
+				<table>
+					<tr align="center">
+						<td colspan="3">
+							<button>↑</button>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<button>←</button>
+						</td>
+						<td>
+							<button>↓</button>
+						</td>
+						<td>
+							<button>→</button>
+						</td>
+					</tr>
+				</table>
+			</div>
+			<div id="videoContents">
+				<ul>
+					<li><a href="#videoContent-1">Video 1</a></li>
+					<li><a href="#videoContent-2">Video 2</a></li>
+				</ul>
+				<div id="videoContent-1">
+				</div>
+				<div id="videoContent-2">
+				</div>
+			</div>
+			<div id="advanced_control">
+				<div id="special_moves">
+				</div>
+				<div id="special_moves2">
+				</div>
+			</div>
+			<div class="clear"/>
+			<div style="border-top:1px solid gray; padding:0px; overflow:auto;">
+				<div style="float:left; width:49%; padding:4px; border-right:1px solid gray; margin:0px">
+					System Output:<br/>
+					<textarea id="system_output" readonly style="overflow:hidden;"></textarea>
+				</div>
+				<div style="float:left; width:49%; padding:4px; margin-left:3px">
+					User Output:<br/>
+					<textarea id="user_output" readonly style="overflow:hidden;"></textarea>
+				</div>
+			</div>
+		</div>
+		<div id="footer">Copyright 2012 by Room301</div>
+	</div>
+</body>
+</html>

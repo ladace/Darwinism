@@ -15,6 +15,53 @@ void test(httpd* server) {
     }
 }
 
+#define MAX_PATH_LEN  256
+
+void request_file(httpd* server) {
+    const char* path = httpdRequestPath(server);
+
+    const char* suffix = rindex(path, '.');
+    if (suffix != NULL)
+    {
+        if (strcasecmp(suffix,".gif") == 0) 
+            httpdSetContentType(server, "image/gif");
+        if (strcasecmp(suffix,".jpg") == 0) 
+            httpdSetContentType(server, "image/jpeg");
+        if (strcasecmp(suffix,".xbm") == 0) 
+            httpdSetContentType(server, "image/xbm");
+        if (strcasecmp(suffix,".png") == 0) 
+            httpdSetContentType(server, "image/png");
+        if (strcasecmp(suffix,".css") == 0) 
+            httpdSetContentType(server, "text/css");
+        if (strcasecmp(suffix,".js") == 0) 
+            httpdSetContentType(server, "application/x-javascript");
+    }
+    printf("path: %s\n", path);
+    const char* file = index(path, '/');
+    if (file && strcmp(file, "/") != 0) printf("%s\n", file);
+    else file = "/index.html";
+
+    char lpath[MAX_PATH_LEN];
+    strcpy(lpath, "www");
+    strcat(lpath, file);
+
+    FILE *f = fopen(lpath, "r");
+    if (!f) {
+        httpdSetResponse(server, "404 Not found");
+        return;
+    }
+
+    int n;
+    char buf[10240];
+    do {
+        n = fread(buf, 1, 10239, f);
+        buf[n] = 0;
+        //printf(buf);
+        httpdPrintf(server, "%s", buf);
+    } while (n == 10239);
+    fclose(f);
+}
+
 int main() {
     pthread_mutex_init(&rbt_mutex, NULL);
     if (pthread_create(&rbt_tid, NULL, robot_func, NULL) != 0) {
@@ -46,7 +93,14 @@ int main() {
     httpdAddCContent(server, "/", "test",     HTTP_FALSE, NULL, test    );
 
     httpdSetFileBase(server, "./www");
-    httpdAddFileContent(server, "/", "index.html", HTTP_TRUE, NULL, "index.html");
+
+    httpdAddCWildcardContent(server, "/", NULL, request_file);
+    httpdAddCWildcardContent(server, "/js", NULL, request_file);
+    httpdAddCWildcardContent(server, "/css", NULL, request_file);
+    httpdAddCWildcardContent(server, "/css/custom-theme", NULL, request_file);
+    httpdAddCWildcardContent(server, "/css/custom-theme/images", NULL, request_file);
+
+    httpdAddCContent(server, "/", "index.html", HTTP_TRUE, NULL, request_file);
 
     printf("Server Start.\n");
 

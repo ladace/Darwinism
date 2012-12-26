@@ -26,5 +26,5 @@ actionEditor.o:
 clean:
 	@rm *.o server
 
-.PHONY: all clean run
+.PHONY: all clean run lib
 

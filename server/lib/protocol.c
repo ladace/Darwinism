@@ -701,7 +701,8 @@ void _httpd_catFile(server, path, mode)
 		else
 		{
 			buf[readLen] = 0;
-			writeLen = _httpd_sendExpandedText(server,buf,readLen);
+			//writeLen = _httpd_sendExpandedText(server,buf,readLen);
+			_httpd_net_write(server->clientSock, buf, readLen);
 			server->response.responseLength += writeLen;
 		}
 		readLen = read(fd, buf, HTTP_MAX_LEN - 1);
