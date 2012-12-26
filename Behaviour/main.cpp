@@ -35,7 +35,9 @@ int main(void)
         string str;
         cin >> str;
         if (str == "walk") {
-            Behaviour::GetInstance()->Walk(Behaviour::STEPPING);
+            int id;
+            cin >> id;
+            Behaviour::GetInstance()->Walk(id);
         } else if (str == "stop") {
             Behaviour::GetInstance()->WalkStop();
         } else if (str == "action") {
@@ -45,8 +47,8 @@ int main(void)
         } else if (str == "exit") {
             break;
         } else printf("invalid cmd\n");
-        for (int i=0;i<100;i++) {
-            usleep(10000);
+        for (int i=0;i<10;i++) {
+            usleep(1000000);
             Behaviour::GetInstance()->Process();
         }
     }

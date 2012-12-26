@@ -15,23 +15,28 @@ namespace Robot
 	{
 	public:
 		enum {//ActionID
-			STAND_UP	= 1 ,
-			START_UP	= 9 ,
+			STAND_INIT	= 1 ,
+			WALK_READY	= 9 ,
 			FORW_GETUP	= 10,
 			BACK_GETUP	= 11,
 			RIGHT_KICK	= 12,
 			LEFT_KICK	= 13,
-			SIT_DOWN	= 15
+			SIT_DOWN	= 15,
+			START_UP	= 16,
+			MULT_ACTION	= 17,
+			RIGHT_PASS	= 70,
+			LEFT_PASS	= 71,
 		};
 
 		enum {//WalkingID
-			STEPPING	= 0 ,
-			WALK_FORW	= 1 ,
-			WALK_BACK	= 2 ,
-			WALK_LEFT	= 3 ,
-			WALK_RIGHT	= 4 ,
-			TURN_LEFT	= 5 ,
-			TURN_RIGHT	= 6
+			DEFAULT		= 0 ,
+			STEPPING	= 1 ,
+			WALK_FORW	= 2 ,
+			WALK_BACK	= 3 ,
+			WALK_LEFT	= 4 ,
+			WALK_RIGHT	= 5 ,
+			TURN_LEFT	= 6 ,
+			TURN_RIGHT	= 7
 		};
 		enum {//BUTTONID
 			BTN_MODE = 1,
@@ -42,10 +47,13 @@ namespace Robot
 		static Behaviour* m_UniqueInstance;
 		Behaviour();
 		void CheckButton();
+		bool CheckIsActionWalkReadyAfter(int ActionID);
+		bool CheckIsActionWalkReadyBefore(int ActionID);
 		bool m_Real_Acting;
 		int  m_Next_Action;
 		bool m_Real_walking;
 		bool m_Ctrl_Walking;
+		bool m_IsWalkReady;
 		HeadManager * m_Head_Mode;
 
 		int m_old_btn;
@@ -57,7 +65,7 @@ namespace Robot
 			return m_UniqueInstance;
 		}
 
-		void Walk(int WalkingID);
+		void Walk(int WalkingID = -1);
 		void Walk(int X, int Y, int A);//use the default ParSet with speed
 		void WalkStop();
 

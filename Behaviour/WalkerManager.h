@@ -52,7 +52,10 @@ namespace Robot
 		void Stop();
 		bool IsRunning();
 
-		const double * GetParSet(int parSetID = -1);
+		void GetCurParSet(std::vector<double> &result);
+		void GetCurParSetNormalization(std::vector<double> &result, std::vector<double> &norResult);
+
+		int GetSetSize();
 		void LoadParSet(int parSetID = -1);//default parameter set is 0
 		void SaveParSet(int parSetID = -1);//id must not be 0, and if id is the set.size(), then pushback a new int[]
 		bool DelParSet(int parSetID = -1);
@@ -60,9 +63,10 @@ namespace Robot
 		void SetSpeed(int x, int y, int a);
 
 		double GetParameterValue(int parameterID);
+		double ChkParameterRange(int parameterID, double value);
 		void SetParameter(int parameterID, double value);
 		void ChgParameter(int parameterID, double delta);
-		void ChgParameterNormalization(int parameterID, int delta);//the minimum of delta can be 1
+		void SetParameterNormalization(int parameterID, double value);//the value must be in [0,1]
 
 		void PrintParSet();
 

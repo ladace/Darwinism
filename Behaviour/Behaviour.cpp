@@ -78,7 +78,8 @@ Behaviour::Behaviour() {
 	m_Real_walking = false;
 	m_Real_Acting  = false;
 	m_Ctrl_Walking = false;
-	m_Next_Action = START_UP;
+	m_IsWalkReady  = false;
+	m_Next_Action = SIT_DOWN;
 	m_Head_Mode = &headFixedMode;
 	//headFixedMode.SetAngle(Head::GetInstance()->GetPanAngle(), Head::GetInstance()->GetTiltAngle())
 	m_old_btn   = 0;
@@ -105,8 +106,17 @@ void Behaviour::CheckButton() {
     }
 }
 
+bool Behaviour::CheckIsActionWalkReadyAfter(int ActionID) {
+	return (ActionID!=STAND_INIT && ActionID!=SIT_DOWN);
+}
+
+bool Behaviour::CheckIsActionWalkReadyBefore(int ActionID) {
+	return (ActionID!=STAND_INIT && ActionID!=WALK_READY
+		 && ActionID!=SIT_DOWN && ActionID!=START_UP);
+}
+
 void Behaviour::Walk(int parSetID) {
-	WalkerManager::GetInstance()->LoadParSet(parSetID);
+	if (parSetID>=0) WalkerManager::GetInstance()->LoadParSet(parSetID);
 	m_Ctrl_Walking = true;
 }
 
@@ -146,11 +156,19 @@ void Behaviour::Process() {
                 Action::GetInstance()->Start(FORW_GETUP);   // FORWARD GETUP
             else if(MotionStatus::FALLEN == BACKWARD)
                 Action::GetInstance()->Start(BACK_GETUP);   // BACKWARD GETUP
+        	m_IsWalkReady = true;
         } else {
             Head::GetInstance()->m_Joint.SetEnableHeadOnly(true);
             Walking::GetInstance()->m_Joint.SetEnableBody(false);
             Action::GetInstance()->m_Joint.SetEnableBodyWithoutHead(true);
+        	if (!m_IsWalkReady && CheckIsActionWalkReadyBefore(m_Next_Action)) {
+        		Action::GetInstance()->Start(WALK_READY);
+                m_Real_Acting = true;
+                m_IsWalkReady = true;
+                return;
+        	}
     		Action::GetInstance()->Start(m_Next_Action);
+		m_IsWalkReady = CheckIsActionWalkReadyAfter(m_Next_Action);
         }
         m_Real_Acting = true;
         m_Next_Action = -1;
@@ -162,6 +180,12 @@ void Behaviour::Process() {
     if (m_Real_Acting) return;
 
     if (!m_Real_walking && m_Ctrl_Walking) {//start Walking
+    	if (!m_IsWalkReady) {
+    		Action::GetInstance()->Start(WALK_READY);
+            m_Real_Acting = true;
+            m_IsWalkReady = true;
+            return;
+    	}
         Head::GetInstance()->m_Joint.SetEnableHeadOnly(true);
         Walking::GetInstance()->m_Joint.SetEnableBodyWithoutHead(true);
         Action::GetInstance()->m_Joint.SetEnableBody(false);
@@ -180,8 +204,8 @@ void Behaviour::SetSpeed(int X, int Y, int A) {
 }
 
 void Behaviour::SetSpeedUp(int deltaX, int deltaY, int deltaA) {
-	WalkerManager::GetInstance()->ChgParameterNormalization(WalkerManager::STEP_FORWARDBACK, deltaX);
-	WalkerManager::GetInstance()->ChgParameterNormalization(WalkerManager::STEP_RIGHTLEFT, deltaY);
-	WalkerManager::GetInstance()->ChgParameterNormalization(WalkerManager::STEP_DIRECTION, deltaA);
+	WalkerManager::GetInstance()->ChgParameter(WalkerManager::STEP_FORWARDBACK, deltaX);
+	WalkerManager::GetInstance()->ChgParameter(WalkerManager::STEP_RIGHTLEFT, deltaY);
+	WalkerManager::GetInstance()->ChgParameter(WalkerManager::STEP_DIRECTION, deltaA);
 }
 

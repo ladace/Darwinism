@@ -1,5 +1,5 @@
 CFLAGS = $(INCLUDE_DIRS)
-CXXFLAGS += -O2 -DLINUX -g -Wall -fmessage-length=0 $(INCLUDE_DIRS)
+CXXFLAGS += -O2 -DLINUX -g -w -fmessage-length=0 $(INCLUDE_DIRS)
 INCLUDE_DIRS = -Ilib -I../MyActionEditor -I../Behaviour -I../../../include -I../../../../Framework/include
 LIBS += -lpthread -lncurses -lrt
 

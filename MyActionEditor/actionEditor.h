@@ -6,7 +6,10 @@
 #include <term.h>
 #include <fcntl.h>
 #include <ncurses.h>
+#include <vector>
+#include <string>
 
+using namespace std;
 using namespace Robot;
 
 #define R_SHOULDER_PITCH     0x00000001
@@ -65,4 +68,5 @@ public:
 	bool preFormStep(int flags);
 	bool formStep(int stepNo, int stepTime, int stepPause);
 	bool playStep(int stepNo);
+	bool getPageName(vector<string>& nameList);
 };

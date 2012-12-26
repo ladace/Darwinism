@@ -1,6 +1,5 @@
 #include "actionEditor.h"
 
-
 #ifdef RX28M_1024
 #define MOTION_FILE_PATH    "/darwin/Data/motion_4096.bin"
 #else
@@ -82,6 +81,20 @@ actionEditor::actionEditor(CM730* cm730)
 
 actionEditor::~actionEditor()
 {
+}
+
+bool actionEditor::getPageName(vector<string>& nameList)
+{
+	for(int i = 0; i < 256; i++)
+	{
+		Action::PAGE tmpPage;
+		if(Action::GetInstance()->LoadPage(i, &tmpPage) == true)
+		{
+			string str((const char*)tmpPage.header.name);
+			nameList.push_back(str);
+		}
+	}
+	return true;
 }
 
 void actionEditor::play()

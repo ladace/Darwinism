@@ -59,6 +59,55 @@ static const double NORMALIZE[] {
 	1
 };
 
+static const double MINPAR[] {
+	-50,
+	-20,
+	0,
+	-10,
+	-10,
+	-10,
+	0,
+	500,
+	0,
+	0,
+	-100,
+	-50,
+	-50,
+	0,
+	0,
+	-10,
+	-10,
+	0,
+	0,
+	-5,
+	-5
+};
+
+static const double MAXPAR[] {
+	50,
+	30,
+	50,
+	10,
+	10,
+	10,
+	50,
+	750,
+	0.5,
+	0.5,
+	100,
+	50,
+	50,
+	100,
+	40,
+	25,
+	10,
+	25,
+	15,
+	5,
+	5
+};
+
+
 WalkerManager* WalkerManager::m_UniqueInstance = 0;
 
 WalkerManager::WalkerManager() {
@@ -113,11 +162,38 @@ bool WalkerManager::IsRunning() {
 	return Walking::GetInstance()->IsRunning();
 }
 
+void WalkerManager::WalkerManager::GetCurParSet(std::vector<double> &result) {
+	if (result.size() != PARAMETER_NUM) {
+		result.clear();
+		result.resize(PARAMETER_NUM);
+	}
+	for (int i=0;i<PARAMETER_NUM;i++) {
+		result[i] = GetParameter(i);
+	}
+}
+
+void WalkerManager::GetCurParSetNormalization(std::vector<double> &result, std::vector<double> &norResult) {
+	if (result.size() != PARAMETER_NUM) {
+		result.clear();
+		result.resize(PARAMETER_NUM);
+	}
+	GetCurParSet(result);
+	for (int i=0;i<PARAMETER_NUM;i++) {
+		norResult[i] = (result[i] - MINPAR[i]) / (MAXPAR[i] - MINPAR[i]);
+	}
+}
+
+/*
 const double * WalkerManager::GetParSet(int parSetID) {
 	if (parSetID>=0 && parSetID<ParSet.size()) {
 		return ParSet[parSetID];
 	}
 	return ParSet[curParSetID];
+}
+*/
+
+int WalkerManager::GetSetSize() {
+	return ParSet.size();
 }
 
 void WalkerManager::LoadParSet(int parSetID) {
@@ -165,16 +241,26 @@ double WalkerManager::GetParameterValue(int parameterID) {
 	return double(GetParameter(parameterID));
 }
 
+double WalkerManager::ChkParameterRange(int parameterID, double value) {
+	if (value<MINPAR[parameterID]) return MINPAR[parameterID];
+	if (value>MAXPAR[parameterID]) return MAXPAR[parameterID];
+	return value;
+}
+
 void WalkerManager::SetParameter(int parameterID, double value) {
-	GetParameter(parameterID) = value;
+	GetParameter(parameterID) = ChkParameterRange(parameterID, value);
 }
 
 void WalkerManager::ChgParameter(int parameterID, double delta) {
-	GetParameter(parameterID) += delta;
+	double &par = GetParameter(parameterID);
+	par = ChkParameterRange(parameterID, par + delta);
 }
 
-void WalkerManager::ChgParameterNormalization(int parameterID, int delta) {
-	GetParameter(parameterID) += delta*NORMALIZE[parameterID];
+void WalkerManager::SetParameterNormalization(int parameterID, double value) {
+	double &par = GetParameter(parameterID);
+	if (value > 1) value = 1;
+	else if (value < 0) value = 0;
+	par = value * (MAXPAR[parameterID] - MINPAR[parameterID]) + MINPAR[parameterID];
 }
 
 void WalkerManager::PrintParSet() {
@@ -185,11 +271,19 @@ void WalkerManager::PrintParSet() {
 
 void WalkerManager::LoadParSetFile(std::string fileName) {
 	FILE* fin = fopen(fileName.c_str(), "r");
+    if( fin == 0 )
+	{
+		fprintf(stderr, "Can not open WalkerManager file! %s\n", fileName.c_str());
+        return;
+	}
 	int n=0;
 	fscanf(fin, "%d", &n);
 	for (int i=0;i<n;i++) {
 		double * newparset = new double[PARAMETER_NUM];
-		for (int j=0;j<PARAMETER_NUM;j++) fscanf(fin, "%lf", newparset+j);
+		for (int j=0;j<PARAMETER_NUM;j++) {
+			fscanf(fin, "%lf", newparset+j);
+			newparset[j] = ChkParameterRange(j, newparset[j]);
+		}
 		ParSet.push_back(newparset);
 	}
 	fclose(fin);

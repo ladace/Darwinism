@@ -31,6 +31,9 @@ int main() {
     httpdAddCContent(server, "/behav", "walkstop", HTTP_FALSE, NULL, walkstop);
     httpdAddCContent(server, "/behav", "action",   HTTP_FALSE, NULL, action  );
 
+    httpdAddCContent(server, "/walk",  "set-param",   HTTP_FALSE, NULL, set_walk_param);
+    httpdAddCContent(server, "/walk",  "get-param",   HTTP_FALSE, NULL, set_walk_param);
+
     httpdAddCContent(server, "/", "test",     HTTP_FALSE, NULL, test    );
 
     httpdSetFileBase(server, "./www");
