@@ -41,6 +41,7 @@ int main() {
     httpdAddCContent(server, "/walk",  "get-cur-parset",        HTTP_FALSE, NULL, walk_get_cur_parset);
     httpdAddCContent(server, "/walk",  "get-cur-parset-norm",   HTTP_FALSE, NULL, walk_get_cur_parset_norm);
     httpdAddCContent(server, "/walk",  "get-parset-n",          HTTP_FALSE, NULL, walk_get_parset_num);
+    httpdAddCContent(server, "/walk",  "get-par-minmax",        HTTP_FALSE, NULL, walk_get_par_minmax);
 
     httpdAddCContent(server, "/", "test",     HTTP_FALSE, NULL, test    );
 

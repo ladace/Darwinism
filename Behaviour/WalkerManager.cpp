@@ -6,6 +6,7 @@
 #include <term.h>
 #include <ncurses.h>
 #include <string>
+#include <cassert>
 #include "WalkerManager.h"
 
 using namespace Robot;
@@ -99,8 +100,7 @@ static const double MAXPAR[] {
 	50,
 	100,
 	40,
-	25,
-	10,
+	25, 10,
 	25,
 	15,
 	5,
@@ -345,4 +345,15 @@ double& WalkerManager::GetParameter(int parameterID) {
 	}
 }
 
+void WalkerManager::GetParameterRanges(std::vector<double>& min, std::vector<double>& max) {
+    int n = sizeof(MINPAR)/sizeof(double);
+    min.resize(n);
+    for (int i = 0; i < n; ++i)
+        min[i] = MINPAR[i];
+
+    assert(n == sizeof(MAXPAR)/sizeof(double));
+    max.resize(n);
+    for (int i = 0; i < n; ++i)
+        max[i] = MAXPAR[i];
+}
 

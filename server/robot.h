@@ -29,6 +29,7 @@ void walk_start(httpd* server);
 void walk_get_cur_parset(httpd* server);
 void walk_get_cur_parset_norm(httpd* server);
 void walk_get_parset_num(httpd* server);
+void walk_get_par_minmax(httpd* server);
 
 #ifdef __cplusplus
 }

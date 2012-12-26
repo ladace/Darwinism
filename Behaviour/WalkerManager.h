@@ -64,6 +64,7 @@ namespace Robot
 
 		double GetParameterValue(int parameterID);
 		void SetParameter(int parameterID, double value);
+                void GetParameterRanges(std::vector<double>& min, std::vector<double>& max);
 		void ChgParameter(int parameterID, double delta);
 		void SetParameterNormalization(int parameterID, double value);//the value must be in [0,1]
 

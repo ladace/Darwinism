@@ -169,7 +169,7 @@ extern "C" {
                     WalkerManager::GetInstance()->LoadParSet();
                 pthread_mutex_unlock(&rbt_mutex);
 
-                httpdOutput(server, "ParSet loaded");
+                walk_get_cur_parset(server); // output the parameters
             } else
                 httpdOutput(server, "ID is invalid!");
         }
@@ -291,6 +291,24 @@ extern "C" {
         pthread_mutex_unlock(&rbt_mutex);
         std::ostringstream os;
         os << n;
+        httpdOutput(server, const_cast<char*>(os.str().c_str()));
+    }
+
+    void walk_get_par_minmax(httpd* server) {
+        int id;
+        std::vector<double> min, max;
+        pthread_mutex_lock(&rbt_mutex);
+            WalkerManager::GetInstance()->GetParameterRanges(min, max);
+        pthread_mutex_unlock(&rbt_mutex);
+
+        std::ostringstream os;
+        os << "[[";
+        for (std::vector<double>::iterator it = min.begin(); it != min.end(); ++it)
+            os << *it << ',';
+        os << "],[";
+        for (std::vector<double>::iterator it = max.begin(); it != max.end(); ++it)
+            os << *it << ',';
+        os << "]]";
         httpdOutput(server, const_cast<char*>(os.str().c_str()));
     }
 
