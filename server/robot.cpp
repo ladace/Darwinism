@@ -117,15 +117,20 @@ extern "C" {
         { "ARM-SWING-GAIN"        , WalkerManager::ARM_SWING_GAIN         },
         { "PARAMETER-NUM"         , WalkerManager::PARAMETER_NUM          },
     };
-    std::map <std::string, int> param_map;
+
+    typedef std::map<std::string, int> param_map_t;
+    param_map_t param_map;
+
     void get_walk_param(httpd* server) {
         CHECK_ROBOT_ON
         httpVar* param_var = httpdGetVariableByName(server, "param");
         if (param_var) {
             const char* param_name = param_var->value;
-            if (param_map.find(param_name) != param_map.end()) {
+            
+            param_map_t::iterator it = param_map.find(param_name);
+            if (it != param_map.end()) {
                 pthread_mutex_lock(&rbt_mutex);
-                double v = WalkerManager::GetInstance()->GetParameterValue(param_map[param_name]);
+                double v = WalkerManager::GetInstance()->GetParameterValue(it->second);
                 pthread_mutex_unlock(&rbt_mutex);
 
                 static char buf[50];
@@ -135,6 +140,7 @@ extern "C" {
         } else
             httpdOutput(server, "Please specify the param name!");
     }
+
     void set_walk_param(httpd* server) {
         CHECK_ROBOT_ON
         httpVar *param_var = httpdGetVariableByName(server, "param"),
@@ -147,9 +153,11 @@ extern "C" {
             }
 
             const char* param_name = param_var->value;
-            if (param_map.find(param_name) != param_map.end()) {
+
+            param_map_t::iterator it = param_map.find(param_name);
+            if (it != param_map.end()) {
                 pthread_mutex_lock(&rbt_mutex);
-                WalkerManager::GetInstance()->SetParameter(param_map[param_name], value);
+                WalkerManager::GetInstance()->SetParameter(it->second, value);
                 pthread_mutex_unlock(&rbt_mutex);
 
                 httpdOutput(server, "Parameter $param has been set as value.");
