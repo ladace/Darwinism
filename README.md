@@ -2,7 +2,6 @@
 
 #### URLs
 
- * `/behav/start` Start the robot, and the robot can do other things. 
  * `/behav/rest` Let him rest.
  * `/behav/walk?motion=<id>` The parameter is optional. The 'motion' parameter &lt;id&gt; is a number 0~7, specifying how the robot walks, forward or backward, or turning around. **TODO** change the 'motion' parameter into string.
  * `/behav/stop-walk` Stop walking.
