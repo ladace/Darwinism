@@ -17,6 +17,16 @@ int get_param_int(httpd* server, const char* name, int* p) {
     return 1;
 }
 
+int output_vector(std::vector<double>& v, std::ostringstream& os) {
+    os << '[';
+    std::vector<double>::iterator it = v.begin();
+    os << *it;
+    for (++it; it != v.end(); ++it) {
+        os << ',' << *it;
+    }
+    os << ']';
+}
+
 extern "C" {
     using Robot::Behaviour;
     using Robot::Walking;
@@ -123,6 +133,7 @@ extern "C" {
 
                 static char buf[50];
                 sprintf(buf, "%lf", v);
+                httpdSetContentType(server, "application/json");
                 httpdOutput(server, buf);
             } else httpdOutput(server, "Parameter $param not found!");
         } else
@@ -260,11 +271,8 @@ extern "C" {
         pthread_mutex_unlock(&rbt_mutex);
 
         std::ostringstream os;
-        os << '[';
-        for (std::vector<double>::iterator it = pars.begin(); it != pars.end(); ++it) {
-            os << *it << ',';
-        }
-        os << ']';
+        output_vector(pars, os);
+        httpdSetContentType(server, "application/json");
         httpdOutput(server, const_cast<char*>(os.str().c_str()));
     }
 
@@ -276,13 +284,12 @@ extern "C" {
         pthread_mutex_unlock(&rbt_mutex);
 
         std::ostringstream os;
-        os << "[[";
-        for (std::vector<double>::iterator it = pars.begin(); it != pars.end(); ++it)
-            os << *it << ',';
-        os << "],[";
-        for (std::vector<double>::iterator it = pars_norm.begin(); it != pars_norm.end(); ++it)
-            os << *it << ',';
-        os << "]]";
+        os << "[";
+        output_vector(pars, os);
+        os << ",";
+        output_vector(pars_norm, os);
+        os << "]";
+        httpdSetContentType(server, "application/json");
         httpdOutput(server, const_cast<char*>(os.str().c_str()));
     }
 
@@ -292,6 +299,7 @@ extern "C" {
         pthread_mutex_unlock(&rbt_mutex);
         std::ostringstream os;
         os << n;
+        httpdSetContentType(server, "application/json");
         httpdOutput(server, const_cast<char*>(os.str().c_str()));
     }
 
@@ -303,13 +311,12 @@ extern "C" {
         pthread_mutex_unlock(&rbt_mutex);
 
         std::ostringstream os;
-        os << "[[";
-        for (std::vector<double>::iterator it = min.begin(); it != min.end(); ++it)
-            os << *it << ',';
-        os << "],[";
-        for (std::vector<double>::iterator it = max.begin(); it != max.end(); ++it)
-            os << *it << ',';
-        os << "]]";
+        os << "[";
+        output_vector(min, os);
+        os << ",";
+        output_vector(max, os);
+        os << "]";
+        httpdSetContentType(server, "application/json");
         httpdOutput(server, const_cast<char*>(os.str().c_str()));
     }
 

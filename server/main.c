@@ -19,8 +19,8 @@ void test(httpd* server) {
 
 void request_file(httpd* server) {
     const char* path = httpdRequestPath(server);
-
     const char* suffix = rindex(path, '.');
+
     if (suffix != NULL)
     {
         if (strcasecmp(suffix,".gif") == 0) 
@@ -34,12 +34,14 @@ void request_file(httpd* server) {
         if (strcasecmp(suffix,".css") == 0) 
             httpdSetContentType(server, "text/css");
         if (strcasecmp(suffix,".js") == 0) 
-            httpdSetContentType(server, "application/javascript");
+            httpdSetContentType(server, "text/javascript");
     }
+    httpdSendHeaders(server);
+
     printf("path: %s\n", path);
     const char* file = index(path, '/');
-    if (file && strcmp(file, "/") != 0) printf("%s\n", file);
-    else file = "/index.html";
+
+    if (file && strcmp(file, "/") == 0) file = "/index.html";
 
     char lpath[MAX_PATH_LEN];
     strcpy(lpath, "www");
