@@ -67,10 +67,11 @@ int main() {
     httpdSetAccessLog(server, stdout);
     httpdSetErrorLog(server, stderr);
 
-    httpdAddCContent(server, "/behav", "rest",      HTTP_FALSE, NULL, rest    );
-    httpdAddCContent(server, "/behav", "walk",      HTTP_FALSE, NULL, walk    );
-    httpdAddCContent(server, "/behav", "stop-walk", HTTP_FALSE, NULL, walk_stop);
-    httpdAddCContent(server, "/behav", "action",    HTTP_FALSE, NULL, action  );
+    httpdAddCContent(server, "/behav", "rest",       HTTP_FALSE, NULL, rest       );
+    httpdAddCContent(server, "/behav", "walk",       HTTP_FALSE, NULL, walk       );
+    httpdAddCContent(server, "/behav", "stop-walk",  HTTP_FALSE, NULL, walk_stop  );
+    httpdAddCContent(server, "/behav", "action",     HTTP_FALSE, NULL, action     );
+    httpdAddCContent(server, "/behav", "is-running", HTTP_FALSE, NULL, is_running );
 
     httpdAddCContent(server, "/walk",  "start"    ,   HTTP_FALSE, NULL, walk_start);
     httpdAddCContent(server, "/walk",  "stop"     ,   HTTP_FALSE, NULL, walk_stop);

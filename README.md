@@ -27,6 +27,7 @@ Put the directory under `/darwin/Linux/project/`.
      - `turnright`
  * `/behav/stop-walk` Stop walking.
  * `/behav/action?id=<id>` Play an action on the robot. &lt;id&gt; is a number specifying the action page to be played.
+ * `/behav/is-running` Check whether the robot's body is busy.
 
 ##### Walk Tuning
 
@@ -34,9 +35,7 @@ Put the directory under `/darwin/Linux/project/`.
  * `/walk/get-param?param=<name>` Get the parameter of `WalkingManager`. The response will be a float number. &lt;param&gt; is a string in the following list:
      - `X-OFFSET`
      - `Y-OFFSET`
-     - `Z-OFFSET`
-     - `ROLL-OFFSET`
-     - `PITCH-OFFSET`
+     - `Z-OFFSET` - `ROLL-OFFSET` - `PITCH-OFFSET`
      - `YAW-OFFSET`
      - `HIP-PITCH-OFFSET`
      - `PERIOD-TIME`
@@ -60,3 +59,6 @@ Put the directory under `/darwin/Linux/project/`.
  * `/walk/get-cur-parset-norm` Get the values and normalized values of all the parameters. The reponse will be a JSON array of two arrays, which are values and normalized values, respectively.
  * `/walk/get-parset-n` Get how many parameter sets there are. The response will be a integer.
  * `/walk/get-par-minmax` Get the min and max values of all the parameters. The reponse will be a JSON array of two arrays, which are min values and max values respectively.
+
+##### Video
+ * `/video/snapshot` The response will be a jpeg that captures what the robot sees.

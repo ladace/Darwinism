@@ -113,6 +113,14 @@ extern "C" {
         }
     }
 
+    void is_running(httpd* server) {
+        httpdSetContentType(server, "application/json");
+        if (Behaviour::GetInstance()->IsRunning())
+            httpdOutput(server, "true");
+        else
+            httpdOutput(server, "false");
+    }
+
     /* Walk Tuning */
     _param const param_list[] = {
         { "X-OFFSET"              , WalkerManager::X_OFFSET               },
@@ -349,8 +357,8 @@ extern "C" {
     }
 
     void* robot_func(void*) {
-        initialize();
         video_initialize();
+        initialize();
         while (true) {
             pthread_mutex_lock(&rbt_mutex);
                 Behaviour::GetInstance()->Process();

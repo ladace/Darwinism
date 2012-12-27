@@ -209,3 +209,6 @@ void Behaviour::SetSpeedUp(int deltaX, int deltaY, int deltaA) {
 	WalkerManager::GetInstance()->ChgParameter(WalkerManager::STEP_DIRECTION, deltaA);
 }
 
+bool Behaviour::IsRunning() {
+	return Walking::GetInstance()->IsRunning() || Action::GetInstance()->IsRunning();
+}

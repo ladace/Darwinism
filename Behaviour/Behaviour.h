@@ -72,6 +72,8 @@ namespace Robot
 		void ActionNext(int ActionID);
 		void ActionStop(bool RightNow = false);
 
+                bool IsRunning();
+
 		void Process();
 
 		void SetSpeed(int X, int Y, int A);//use the current ParSet with speed
