@@ -56,7 +56,8 @@ void request_file(httpd* server) {
     do {
         n = fread(buf, 1, 10000, f);
         buf[n] = 0;
-        httpdPrintf(server, "%s", buf);
+        _httpd_net_write(server->clientSock, buf, n);
+        //httpdPrintf(server, "%s", buf);
     } while (n == 10000);
     fclose(f);
 }
