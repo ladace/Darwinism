@@ -4,17 +4,6 @@
 #include "httpd.h"
 #include "robot.h"
 
-void test(httpd* server) {
-    httpVar* v = httpdGetVariableByName(server, "name");
-    if (v) {
-        printf("Name value: %s\n", v->value);
-        httpdOutput(server, "Hello, $name.");
-    } else {
-        printf("No value provided.\n");
-        httpdOutput(server, "Hello, anonymous.");
-    }
-}
-
 #define MAX_PATH_LEN  256
 
 void request_file(httpd* server) {
@@ -92,7 +81,7 @@ int main() {
     httpdAddCContent(server, "/walk",  "get-parset-n",          HTTP_FALSE, NULL, walk_get_parset_num);
     httpdAddCContent(server, "/walk",  "get-par-minmax",        HTTP_FALSE, NULL, walk_get_par_minmax);
 
-    httpdAddCContent(server, "/", "test",     HTTP_FALSE, NULL, test    );
+    httpdAddCContent(server, "/", "snapshot",        HTTP_FALSE, NULL, walk_get_par_minmax);
 
     httpdSetFileBase(server, "./www");
 

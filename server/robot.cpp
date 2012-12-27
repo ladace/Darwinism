@@ -1,5 +1,6 @@
 #include <pthread.h>
 #include "robot.h"
+#include "video.h"
 #include "Behaviour.h"
 #include "WalkerManager.h"
 #include <cstdlib>
@@ -330,6 +331,7 @@ extern "C" {
 
     void* robot_func(void*) {
         initialize();
+        video_initialize();
         while (true) {
             pthread_mutex_lock(&rbt_mutex);
                 Behaviour::GetInstance()->Process();

@@ -5,7 +5,7 @@ LIBS += -lpthread -lncurses -lrt
 
 all: server
 
-server: main.o robot.o lib actionEditor.o darwin.a behav_lib
+server: main.o robot.o video.o lib actionEditor.o darwin.a behav_lib
 	$(CXX) -o server main.o robot.o lib/httpd.a ../MyActionEditor/actionEditor.o ../Behaviour/lib.a ../../../lib/darwin.a $(LIBS)
 
 run: server
