@@ -35,7 +35,9 @@ Put the directory under `/darwin/Linux/project/`.
  * `/walk/get-param?param=<name>` Get the parameter of `WalkingManager`. The response will be a float number. &lt;param&gt; is a string in the following list:
      - `X-OFFSET`
      - `Y-OFFSET`
-     - `Z-OFFSET` - `ROLL-OFFSET` - `PITCH-OFFSET`
+     - `Z-OFFSET`
+     - `ROLL-OFFSET`
+     - `PITCH-OFFSET`
      - `YAW-OFFSET`
      - `HIP-PITCH-OFFSET`
      - `PERIOD-TIME`

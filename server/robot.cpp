@@ -357,7 +357,7 @@ extern "C" {
     }
 
     void* robot_func(void*) {
-        video_initialize();
+        ///video_initialize();
         initialize();
         while (true) {
             pthread_mutex_lock(&rbt_mutex);
