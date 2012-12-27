@@ -31,6 +31,9 @@ void walk_get_cur_parset_norm(httpd* server);
 void walk_get_parset_num(httpd* server);
 void walk_get_par_minmax(httpd* server);
 
+/* helper function */
+void httpd_send_data(httpd* server, const void* data, size_t size);
+
 #ifdef __cplusplus
 }
 #endif

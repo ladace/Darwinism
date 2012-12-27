@@ -6,6 +6,10 @@
 
 #define MAX_PATH_LEN  256
 
+void httpd_send_data(httpd* server, const void* data, size_t size) {
+    _httpd_net_write(server->clientSock, data, size);
+}
+
 void request_file(httpd* server) {
     const char* path = httpdRequestPath(server);
     const char* suffix = rindex(path, '.');
@@ -48,7 +52,6 @@ void request_file(httpd* server) {
         n = fread(buf, 1, 10000, f);
         buf[n] = 0;
         _httpd_net_write(server->clientSock, buf, n);
-        //httpdPrintf(server, "%s", buf);
     } while (n == 10000);
     fclose(f);
 }
