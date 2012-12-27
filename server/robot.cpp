@@ -115,6 +115,18 @@ extern "C" {
         }
     }
 
+    void speed_up(httpd* server) {
+        int x, y;
+        int rx = get_param_int(server, "x", &x);
+        int ry = get_param_int(server, "y", &y);
+
+        if (rx == -1 || ry == -1) { httpdOutput(server, "Invalid Parameter!"); return; }
+        if (rx == 0) x = 0;
+        if (ry == 0) y = 0;
+        Behaviour::GetInstance()->SetSpeedUp(x, y, 0);
+        httpdOutput(server, "speed up");
+    }
+
     void is_running(httpd* server) {
         httpdSetContentType(server, "application/json");
         if (Behaviour::GetInstance()->IsRunning())
@@ -348,19 +360,47 @@ extern "C" {
 
     void head_up(httpd* server) {
         Head::GetInstance()->MoveByAngleOffset(0, 5);
-        httpdOutput(server, "head up");
+
+        std::ostringstream os;
+        std::vector<double> v;
+        v.push_back(Head::GetInstance()->GetPanAngle());
+        v.push_back(Head::GetInstance()->GetTiltAngle());
+        output_vector(v, os);
+        httpdSetContentType(server, "application/json");
+        httpdOutput(server, const_cast<char*>(os.str().c_str()));
     }
     void head_down(httpd* server) {
         Head::GetInstance()->MoveByAngleOffset(0, -5);
-        httpdOutput(server, "head down");
+
+        std::ostringstream os;
+        std::vector<double> v;
+        v.push_back(Head::GetInstance()->GetPanAngle());
+        v.push_back(Head::GetInstance()->GetTiltAngle());
+        output_vector(v, os);
+        httpdSetContentType(server, "application/json");
+        httpdOutput(server, const_cast<char*>(os.str().c_str()));
     }
     void head_left(httpd* server) {
         Head::GetInstance()->MoveByAngleOffset(5, 0);
-        httpdOutput(server, "head left");
+
+        std::ostringstream os;
+        std::vector<double> v;
+        v.push_back(Head::GetInstance()->GetPanAngle());
+        v.push_back(Head::GetInstance()->GetTiltAngle());
+        output_vector(v, os);
+        httpdSetContentType(server, "application/json");
+        httpdOutput(server, const_cast<char*>(os.str().c_str()));
     }
     void head_right(httpd* server) {
         Head::GetInstance()->MoveByAngleOffset(-5, 0);
-        httpdOutput(server, "head right");
+
+        std::ostringstream os;
+        std::vector<double> v;
+        v.push_back(Head::GetInstance()->GetPanAngle());
+        v.push_back(Head::GetInstance()->GetTiltAngle());
+        output_vector(v, os);
+        httpdSetContentType(server, "application/json");
+        httpdOutput(server, const_cast<char*>(os.str().c_str()));
     }
 
     //walk_stop is defined above

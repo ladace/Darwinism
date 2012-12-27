@@ -72,6 +72,7 @@ int main() {
     httpdAddCContent(server, "/behav", "stop-walk",  HTTP_FALSE, NULL, walk_stop  );
     httpdAddCContent(server, "/behav", "action",     HTTP_FALSE, NULL, action     );
     httpdAddCContent(server, "/behav", "is-running", HTTP_FALSE, NULL, is_running );
+    httpdAddCContent(server, "/behav", "speed-up",   HTTP_FALSE, NULL, speed_up   );
 
     httpdAddCContent(server, "/walk",  "start"    ,   HTTP_FALSE, NULL, walk_start);
     httpdAddCContent(server, "/walk",  "stop"     ,   HTTP_FALSE, NULL, walk_stop);

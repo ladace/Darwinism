@@ -17,6 +17,7 @@ void rest(httpd* server);
 void walk(httpd* server);
 void walk_stop(httpd* server); // also is walktuning functions
 void action(httpd* server);
+void speed_up(httpd* server);
 void is_running(httpd* server);
 
 /* Walktuning functions */
