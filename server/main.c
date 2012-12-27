@@ -68,7 +68,7 @@ int main() {
         fprintf(stderr, "Create sub thread error!\n");
         return -1;
     }
-    httpd* server = httpdCreate(NULL, 8090);
+    httpd* server = httpdCreate(NULL, 80);
     httpdSetAccessLog(server, stdout);
     httpdSetErrorLog(server, stderr);
 

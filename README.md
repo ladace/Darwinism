@@ -1,11 +1,28 @@
+# Darwinism
+
+This is a auxiliary tool on Darwin Robot developed by Room301, enabling people to adjust parameters via web pages and control the robot. Our work is based on the official framework 1.1.
+
+## Usage
+
+Put the directory under `/darwin/Linux/project/`.
+
+* The HTTP server is under the folder `server`. To run the server, input `sudo ./server`. Visit port 80 (default) via browsers and have fun. The IP is `192.168.1.100` normally.
+
+## Docs
+
 ### Server
 
 #### URLs
+
+##### Control
 
  * `/behav/rest` Let him rest.
  * `/behav/walk?motion=<id>` The parameter is optional. The 'motion' parameter &lt;id&gt; is a number 0~7, specifying how the robot walks, forward or backward, or turning around. **TODO** change the 'motion' parameter into string.
  * `/behav/stop-walk` Stop walking.
  * `/behav/action?id=<id>` Play an action on the robot. &lt;id&gt; is a number specifying the action page to be played.
+
+##### Walk Tuning
+
  * `/walk/set-param?param=<name>&value=<v>` Set the parameter of `WalkingManager`. &lt;v&gt; must be a float number.
  * `/walk/get-param?param=<name>` Get the parameter of `WalkingManager`. The response will be a float number. &lt;param&gt; is a string in the following list:
      - `X-OFFSET`

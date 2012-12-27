@@ -57,10 +57,10 @@ int _httpd_net_write(sock, buf, len)
 #if defined(_WIN32) 
 	return( send(sock, buf, len, 0));
 #else
-        size_t sent = 0;
-        while (sent < len) {
+	size_t sent = 0;
+	while (sent < len) {
 		sent += write(sock, buf + sent, len - sent);
-        }
+	}
 	return sent;
 #endif
 }
