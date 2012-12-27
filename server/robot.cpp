@@ -184,7 +184,6 @@ extern "C" {
                 walk_get_cur_parset(server); // output the parameters
             } else
                 httpdSetResponse(server, "400 Bad Request");
-                httpdOutput(server, "ID is invalid!");
         }
     }
 
