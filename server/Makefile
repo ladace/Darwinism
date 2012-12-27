@@ -7,8 +7,8 @@ OBJ = video.o robot.o jpeg_utils.o main.o
 
 all: server
 
-server: $(OBJ) lib actionEditor.o darwin.a behav_lib
-	$(CXX) -o server $(OBJ) lib/httpd.a ../MyActionEditor/actionEditor.o ../Behaviour/lib.a ../../../lib/darwin.a $(LIBS)
+server: $(OBJ) lib actionEditor.o Vision.o darwin.a behav_lib
+	$(CXX) -o server $(OBJ) ../Vision/Vision.o lib/httpd.a ../MyActionEditor/actionEditor.o ../Behaviour/lib.a ../../../lib/darwin.a $(LIBS)
 
 run: server
 	./server
@@ -25,8 +25,11 @@ darwin.a:
 actionEditor.o:
 	$(MAKE) actionEditor.o -C ../MyActionEditor
 
+Vision.o:
+	$(MAKE) Vision.o -C ../Vision
+
 clean:
 	@rm *.o server
 
-.PHONY: all clean run lib
+.PHONY: all clean run lib actionEditor.o vision.o
 

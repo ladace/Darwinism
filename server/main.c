@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include "httpd.h"
 #include "robot.h"
+#include "video.h"
 
 #define MAX_PATH_LEN  256
 
@@ -84,7 +85,7 @@ int main() {
     httpdAddCContent(server, "/walk",  "get-parset-n",          HTTP_FALSE, NULL, walk_get_parset_num);
     httpdAddCContent(server, "/walk",  "get-par-minmax",        HTTP_FALSE, NULL, walk_get_par_minmax);
 
-    httpdAddCContent(server, "/", "snapshot",        HTTP_FALSE, NULL, walk_get_par_minmax);
+    httpdAddCContent(server, "/video", "snapshot",        HTTP_FALSE, NULL, send_snapshot);
 
     httpdSetFileBase(server, "./www");
 
