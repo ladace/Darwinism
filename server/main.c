@@ -34,7 +34,7 @@ void request_file(httpd* server) {
         if (strcasecmp(suffix,".css") == 0) 
             httpdSetContentType(server, "text/css");
         if (strcasecmp(suffix,".js") == 0) 
-            httpdSetContentType(server, "application/x-javascript");
+            httpdSetContentType(server, "application/javascript");
     }
     printf("path: %s\n", path);
     const char* file = index(path, '/');
@@ -50,16 +50,22 @@ void request_file(httpd* server) {
         httpdSetResponse(server, "404 Not found");
         return;
     }
+    FILE *t;
+ if (strcmp(file, "/js/globalize.js") == 0) 
+t  = fopen("temp", "w");
 
     int n;
-    char buf[10240];
+    char buf[102400];
     do {
-        n = fread(buf, 1, 10239, f);
+        n = fread(buf, 1, 100000, f);
         buf[n] = 0;
+        printf("%s: %d\n", file, n);
+        if (strcmp(file, "/js/globalize.js") == 0) fprintf(t, "%s", buf);
         //printf(buf);
         httpdPrintf(server, "%s", buf);
-    } while (n == 10239);
-    fclose(f);
+    } while (n == 100000);
+    fclose(f); if (strcmp(file, "/js/globalize.js") == 0) 
+fclose(t);
 }
 
 int main() {
