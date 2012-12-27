@@ -40,8 +40,7 @@ Put the directory under `/darwin/Linux/project/`.
      - `PITCH-OFFSET`
      - `YAW-OFFSET`
      - `HIP-PITCH-OFFSET`
-     - `PERIOD-TIME`
-     - `DSP-RATIO`
+     - `PERIOD-TIME` - `DSP-RATIO`
      - `STEP-FORWARDBACK-RATIO`
      - `STEP-FORWARDBACK`
      - `STEP-RIGHTLEFT`
@@ -61,6 +60,12 @@ Put the directory under `/darwin/Linux/project/`.
  * `/walk/get-cur-parset-norm` Get the values and normalized values of all the parameters. The reponse will be a JSON array of two arrays, which are values and normalized values, respectively.
  * `/walk/get-parset-n` Get how many parameter sets there are. The response will be a integer.
  * `/walk/get-par-minmax` Get the min and max values of all the parameters. The reponse will be a JSON array of two arrays, which are min values and max values respectively.
+
+##### Head
+ * `/head/up`
+ * `/head/down`
+ * `/head/left`
+ * `/head/right`
 
 ##### Video
  * `/video/snapshot` The response will be a jpeg that captures what the robot sees.

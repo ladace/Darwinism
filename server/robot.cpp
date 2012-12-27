@@ -3,6 +3,7 @@
 #include "video.h"
 #include "Behaviour.h"
 #include "WalkerManager.h"
+#include "Head.h"
 #include <cstdlib>
 #include <map>
 #include <sstream>
@@ -33,6 +34,7 @@ extern "C" {
     using Robot::Walking;
     using Robot::Action;
     using Robot::WalkerManager;
+    using Robot::Head;
 
     pthread_t rbt_tid;
     pthread_mutex_t rbt_mutex;
@@ -342,6 +344,23 @@ extern "C" {
         os << "]";
         httpdSetContentType(server, "application/json");
         httpdOutput(server, const_cast<char*>(os.str().c_str()));
+    }
+
+    void head_up(httpd* server) {
+        Head::GetInstance()->MoveByAngleOffset(0, 5);
+        httpdOutput(server, "head up");
+    }
+    void head_down(httpd* server) {
+        Head::GetInstance()->MoveByAngleOffset(0, -5);
+        httpdOutput(server, "head down");
+    }
+    void head_left(httpd* server) {
+        Head::GetInstance()->MoveByAngleOffset(5, 0);
+        httpdOutput(server, "head left");
+    }
+    void head_right(httpd* server) {
+        Head::GetInstance()->MoveByAngleOffset(-5, 0);
+        httpdOutput(server, "head right");
     }
 
     //walk_stop is defined above

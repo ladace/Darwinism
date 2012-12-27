@@ -86,6 +86,11 @@ int main() {
     httpdAddCContent(server, "/walk",  "get-parset-n",          HTTP_FALSE, NULL, walk_get_parset_num);
     httpdAddCContent(server, "/walk",  "get-par-minmax",        HTTP_FALSE, NULL, walk_get_par_minmax);
 
+    httpdAddCContent(server, "/head",  "up",          HTTP_FALSE, NULL, head_up);
+    httpdAddCContent(server, "/head",  "down",        HTTP_FALSE, NULL, head_down);
+    httpdAddCContent(server, "/head",  "left",        HTTP_FALSE, NULL, head_left);
+    httpdAddCContent(server, "/head",  "right",       HTTP_FALSE, NULL, head_right);
+
     httpdAddCContent(server, "/video", "snapshot",        HTTP_FALSE, NULL, send_snapshot);
 
     httpdSetFileBase(server, "./www");

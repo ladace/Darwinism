@@ -32,6 +32,12 @@ void walk_get_cur_parset_norm(httpd* server);
 void walk_get_parset_num(httpd* server);
 void walk_get_par_minmax(httpd* server);
 
+/* Head functions */
+void head_up(httpd* server);
+void head_down(httpd* server);
+void head_left(httpd* server);
+void head_right(httpd* server);
+
 /* helper function */
 void httpd_send_data(httpd* server, const void* data, size_t size);
 
