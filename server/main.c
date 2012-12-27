@@ -45,27 +45,20 @@ void request_file(httpd* server) {
     strcpy(lpath, "www");
     strcat(lpath, file);
 
-    FILE *f = fopen(lpath, "r");
+    FILE *f = fopen(lpath, "rb");
     if (!f) {
         httpdSetResponse(server, "404 Not found");
         return;
     }
-    FILE *t;
- if (strcmp(file, "/js/globalize.js") == 0) 
-t  = fopen("temp", "w");
 
     int n;
-    char buf[102400];
+    static char buf[10240];
     do {
-        n = fread(buf, 1, 100000, f);
+        n = fread(buf, 1, 10000, f);
         buf[n] = 0;
-        printf("%s: %d\n", file, n);
-        if (strcmp(file, "/js/globalize.js") == 0) fprintf(t, "%s", buf);
-        //printf(buf);
         httpdPrintf(server, "%s", buf);
-    } while (n == 100000);
-    fclose(f); if (strcmp(file, "/js/globalize.js") == 0) 
-fclose(t);
+    } while (n == 10000);
+    fclose(f);
 }
 
 int main() {

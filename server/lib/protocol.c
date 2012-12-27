@@ -49,7 +49,6 @@ int _httpd_net_read(sock, buf, len)
 #endif
 }
 
-
 int _httpd_net_write(sock, buf, len)
 	int	sock;
 	char	*buf;
@@ -58,7 +57,11 @@ int _httpd_net_write(sock, buf, len)
 #if defined(_WIN32) 
 	return( send(sock, buf, len, 0));
 #else
-	return( write(sock, buf, len));
+        size_t sent = 0;
+        while (sent < len) {
+		sent += write(sock, buf + sent, len - sent);
+        }
+	return sent;
 #endif
 }
 

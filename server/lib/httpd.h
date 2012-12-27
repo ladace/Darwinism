@@ -52,7 +52,7 @@ extern "C" {
 
 
 #define	HTTP_PORT 		80
-#define HTTP_MAX_LEN		102400
+#define HTTP_MAX_LEN		10240
 #define HTTP_MAX_URL		1024
 #define HTTP_MAX_HEADERS	1024
 #define HTTP_MAX_AUTH		128
