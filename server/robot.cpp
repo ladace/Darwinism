@@ -37,6 +37,25 @@ extern "C" {
     pthread_t rbt_tid;
     pthread_mutex_t rbt_mutex;
 
+    struct _param {
+        const char* name;
+        int id;
+    };
+
+    typedef std::map<std::string, int> param_map_t;
+
+    _param const motion_list[] = {
+        { "stepping",  Behaviour::STEPPING   },
+        { "forward",   Behaviour::WALK_FORW  },
+        { "backward",  Behaviour::WALK_BACK  },
+        { "left",      Behaviour::WALK_LEFT  },
+        { "right",     Behaviour::WALK_RIGHT },
+        { "turnleft",  Behaviour::TURN_LEFT  },
+        { "turnright", Behaviour::TURN_RIGHT },
+    };
+
+    param_map_t motion_map;
+
     /* Behaviour */
 
     void rest(httpd* server) {
@@ -50,15 +69,16 @@ extern "C" {
     void walk(httpd* server) {
         httpVar* motion_var = httpdGetVariableByName(server, "motion");
         if (motion_var) {
-            //now use id
-            int id;
-            sscanf(motion_var->value, "%d", &id);
+            param_map_t::iterator it = motion_map.find(motion_var->value);
+            if (it == motion_map.end())
+                httpdOutput(server, "Motion parameter $motion is invalid!");
+            else {
+                pthread_mutex_lock(&rbt_mutex);
+                    Behaviour::GetInstance()->Walk(it->second);
+                pthread_mutex_unlock(&rbt_mutex);
 
-            pthread_mutex_lock(&rbt_mutex);
-                Behaviour::GetInstance()->Walk(id);
-            pthread_mutex_unlock(&rbt_mutex);
-
-            httpdOutput(server, "walk - motion: $motion");
+                httpdOutput(server, "walk - motion: $motion");
+            }
         } else {
             pthread_mutex_lock(&rbt_mutex);
                 Behaviour::GetInstance()->Walk();
@@ -94,10 +114,7 @@ extern "C" {
     }
 
     /* Walk Tuning */
-    struct _param {
-        const char* name;
-        int id;
-    } const param_list[] = {
+    _param const param_list[] = {
         { "X-OFFSET"              , WalkerManager::X_OFFSET               },
         { "Y-OFFSET"              , WalkerManager::Y_OFFSET               },
         { "Z-OFFSET"              , WalkerManager::Z_OFFSET               },
@@ -118,7 +135,6 @@ extern "C" {
         { "ARM-SWING-GAIN"        , WalkerManager::ARM_SWING_GAIN         },
     };
 
-    typedef std::map<std::string, int> param_map_t;
     param_map_t param_map;
 
     void walk_get_param(httpd* server) {
@@ -324,8 +340,12 @@ extern "C" {
 
     void initialize() {
         Behaviour::GetInstance(); //Initialize the robot
+
         int n_param = sizeof(param_list) / sizeof(_param);
         for (int i = 0; i < n_param; ++i) param_map[param_list[i].name]=param_list[i].id;
+
+        int n_motion_param = sizeof(motion_list) / sizeof(_param);
+        for (int i = 0; i < n_motion_param; ++i) motion_map[motion_list[i].name] = motion_list[i].id;
     }
 
     void* robot_func(void*) {

@@ -17,7 +17,14 @@ Put the directory under `/darwin/Linux/project/`.
 ##### Control
 
  * `/behav/rest` Let him rest.
- * `/behav/walk?motion=<id>` The parameter is optional. The 'motion' parameter &lt;id&gt; is a number 0~7, specifying how the robot walks, forward or backward, or turning around. **TODO** change the 'motion' parameter into string.
+ * `/behav/walk?motion=<name>` The parameter is optional. The 'motion' parameter &lt;name&gt; is a number 0~7, specifying how the robot walks, forward or backward, or turning around. &lt;name&gt; should be in the following list:
+     - `stepping`
+     - `forward`
+     - `backward`
+     - `left`
+     - `right`
+     - `turnleft`
+     - `turnright`
  * `/behav/stop-walk` Stop walking.
  * `/behav/action?id=<id>` Play an action on the robot. &lt;id&gt; is a number specifying the action page to be played.
 

@@ -1,6 +1,6 @@
 CFLAGS = $(INCLUDE_DIRS)
 CXXFLAGS += -O2 -DLINUX -g -w -fmessage-length=0 $(INCLUDE_DIRS)
-INCLUDE_DIRS = -Ilib -I../MyActionEditor -I../Behaviour -I../../../include -I../../../../Framework/include
+INCLUDE_DIRS = -Ilib -I../MyActionEditor -I../Behaviour -I../Vision -I../../../include -I../../../../Framework/include
 LIBS += -lpthread -lncurses -lrt -ljpeg
 
 OBJ = video.o robot.o jpeg_utils.o main.o
