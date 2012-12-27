@@ -28,6 +28,7 @@ Put the directory under `/darwin/Linux/project/`.
  * `/behav/stop-walk` Stop walking.
  * `/behav/action?id=<id>` Play an action on the robot. &lt;id&gt; is a number specifying the action page to be played.
  * `/behav/is-running` Check whether the robot's body is busy.
+ * `/behav/speed-up?x=<x>&y=<y>` Both parameters are optional. This will change the walking parameters temporarily.
 
 ##### Walk Tuning
 
